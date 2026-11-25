@@ -129,6 +129,7 @@ a{color:var(--accent);}
 .brand-logo img{height:38px;width:auto;display:block;}
 .brand-sep{width:1px;align-self:stretch;background:rgba(255,255,255,.2);}
 @media(max-width:820px){.brand-wrap{flex-wrap:wrap;gap:10px;max-width:100%;padding-top:30px;}.brand-logo{padding:6px 10px;}.brand-logo img{height:26px;}.brand-sep{display:none;}}
+#reconcile-note{display:block;line-height:1.75;font-size:12px;}
 .update-badge{
   display:inline-block; margin-left:10px; padding:2px 9px; border-radius:20px;
   background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.25);
@@ -247,13 +248,13 @@ a{color:var(--accent);}
 .scrim.show{display:block;}
 
 /* ---------- KPI cards ---------- */
-.kpi-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(176px,1fr));gap:10px;}
 .kpi-card{
   background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
   padding:12px 13px;box-shadow:var(--shadow);
 }
 .kpi-card .kpi-label{font-size:10.8px;color:var(--slate-500);font-weight:600;text-transform:none;}
-.kpi-card .kpi-value{font-size:22px;font-weight:800;color:var(--navy-900);margin-top:3px;letter-spacing:-.3px;}
+.kpi-card .kpi-value{font-size:23px;font-weight:800;color:var(--navy-900);margin-top:3px;letter-spacing:-.3px;}
 .kpi-card .kpi-sub{font-size:11px;color:var(--slate-500);margin-top:3px;}
 .kpi-card .kpi-sub.pos{color:var(--ontime);}
 .kpi-card .kpi-sub.neg{color:var(--delay);}
@@ -320,8 +321,8 @@ table.dt tfoot td{
 /* ---------- Charts row ---------- */
 .chart-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:12px;}
 .chart-grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
-.chart-box{position:relative;height:230px;}
-.chart-box.tall{height:300px;}
+.chart-box{position:relative;height:270px;}
+.chart-box.tall{height:340px;}
 .insight-box{
   margin-top:10px;padding:9px 11px;background:var(--slate-100);border-left:3px solid var(--accent);
   border-radius:4px;font-size:12px;color:var(--navy-800);
@@ -402,6 +403,14 @@ footer.appfoot{text-align:center;padding:30px 0 60px;color:var(--slate-500);font
 .pill-status.progress{background:#EAF1FB;color:#2E5FA3;}
 .pill-status.done{background:var(--ontime-bg);color:var(--ontime);}
 .pill-status.ack{background:#EEF0F4;color:#5A6B85;}
+.delta-good{color:#128A4F;font-weight:800;white-space:nowrap;}
+.delta-bad{color:#C62828;font-weight:800;white-space:nowrap;}
+.delta-mix{color:#B4750F;font-weight:800;white-space:nowrap;}
+.delta-flat{color:var(--slate-500);font-weight:700;white-space:nowrap;}
+.kpi-vs{color:var(--slate-500);font-weight:500;font-size:10.8px;}
+.kpi-card .kpi-sub .delta-good,.kpi-card .kpi-sub .delta-bad{font-size:13px;}
+.chart-grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.chart-box{background:linear-gradient(#fff,#fbfcfe);}
 .trend-up{color:var(--ontime);font-weight:800;}
 .trend-down{color:var(--delay);font-weight:800;}
 #plate-search-input{background:transparent;}
@@ -427,7 +436,7 @@ footer.appfoot{text-align:center;padding:30px 0 60px;color:var(--slate-500);font
 
 @media(max-width:1100px){
   .kpi-grid{grid-template-columns:repeat(3,1fr);}
-  .chart-grid,.chart-grid3,.shift-grid{grid-template-columns:1fr;}
+  .chart-grid,.chart-grid2,.chart-grid3,.shift-grid{grid-template-columns:1fr;}
 }
 @media(max-width:820px){
   .app-shell{flex-direction:column;}
@@ -719,67 +728,8 @@ footer.appfoot{text-align:center;padding:30px 0 60px;color:var(--slate-500);font
     </div>
 
     <div class="section-title-row">
-      <h2><span class="num">4</span> การคำนวณค่าปรับ — รถไม่รักษาเวลาวิ่งตาม HT</h2>
-      <span class="section-note">ล่าช้า &gt; 60 นาที = 500 บาท · ล่าช้า &gt; 90 นาที = 2,000 บาท · ปรับสูงสุด 1 ครั้ง/ทะเบียน/วัน</span>
-    </div>
-    <div class="panel" id="panel-penalty">
-      <div class="panel-head"><div class="ph-title"><span class="dot"></span>ตารางค่าปรับรายเที่ยว (แก้ไขได้)</div>
-        <div class="panel-tools">
-          <button class="tool-btn" onclick="exportTableExcel('tbl-penalty','Penalty_Detail')">⇩</button>
-          <button class="tool-btn" onclick="exportSectionImage('panel-penalty')">📷</button>
-          <button class="tool-btn" onclick="togglePanel('panel-penalty')">⤢</button>
-        </div>
-      </div>
-      <div class="panel-body">
-        <div class="badge-note" style="display:block;line-height:1.6;">📐 <b>เกณฑ์คำนวณค่าปรับ:</b> นาทีล่าช้า = เวลาจริง (GPS) − เวลามาตรฐาน · เริ่มนับหลังล่าช้าเกิน 30 นาที → <b>ล่าช้า ≤ 60 นาที ไม่ปรับ</b> · <b>&gt; 60 นาที ปรับ 500 บาท</b> (เกิน 30 นาทีไป 30 นาที) · <b>&gt; 90 นาที ปรับ 2,000 บาท</b> (เกิน 30 นาทีไป 60 นาที) · <b>ปรับสูงสุด 1 ครั้งต่อทะเบียนต่อวัน</b> (วันที่นับตามวันที่ถึงปลายทางจริง) — ถ้ามีหลายเที่ยวล่าช้าในวันเดียวกัน จะปรับเที่ยวที่ค่าปรับสูงสุดเพียงเที่ยวเดียว</div>
-        <div class="toolbar-row">
-          <div class="filter-group" style="background:var(--slate-100);border-color:var(--border);">
-            <label style="color:var(--slate-500);">ช่วงวันที่คำนวณค่าปรับ</label>
-            <input type="date" id="pen-start" style="color:var(--navy-900);">
-            <span>–</span>
-            <input type="date" id="pen-end" style="color:var(--navy-900);">
-          </div>
-          <select class="ddl" id="pen-shift-ddl">
-            <option value="ALL">ทุกกะ</option>
-            <option value="A">กะ A</option>
-            <option value="B">กะ B</option>
-            <option value="C">กะ C</option>
-          </select>
-          <select class="ddl" id="pen-type-ddl">
-            <option value="ALL">ทุกประเภท</option>
-            <option value="AB">AB</option>
-            <option value="CC">CC</option>
-          </select>
-          <button class="btn primary" onclick="renderPenalty()">ค้นหา / คำนวณใหม่</button>
-          <div class="spacer"></div>
-          <span class="section-note" id="pen-count-note"></span>
-        </div>
-        <div class="table-scroll" style="max-height:420px;"><table class="dt" id="tbl-penalty"></table></div>
-
-        <div class="section-title-row" style="margin-top:20px;">
-          <h2 style="font-size:13px;">4.1 สรุปค่าปรับแยกทะเบียน</h2>
-        </div>
-        <div class="table-scroll" style="max-height:300px;"><table class="dt" id="tbl-penalty-byplate"></table></div>
-
-        <div class="section-title-row" style="margin-top:20px;">
-          <h2 style="font-size:13px;">4.2 สรุปค่าปรับแยกตามกะ</h2>
-        </div>
-        <div class="chart-grid">
-          <div class="table-scroll" style="max-height:200px;"><table class="dt" id="tbl-penalty-byshift"></table></div>
-          <div class="chart-box"><canvas id="chart-penalty-shift-pie"></canvas></div>
-        </div>
-
-        <div class="section-title-row" style="margin-top:20px;">
-          <h2 style="font-size:13px;">4.3 แนวโน้มค่าปรับรายวัน แยกกะ</h2>
-        </div>
-        <div class="chart-box tall"><canvas id="chart-penalty-daily"></canvas></div>
-        <div class="insight-box" id="insight-penalty"></div>
-      </div>
-    </div>
-
-    <div class="section-title-row">
-      <h2><span class="num">5</span> เปรียบเทียบ AB vs CC (ทุกกะ)</h2>
-      <span class="section-note">เปรียบเทียบปริมาณงาน / ผลตรงเวลา-ล่าช้า / ค่าปรับ ระหว่างประเภทรถ</span>
+      <h2><span class="num">4</span> เปรียบเทียบ AB vs CC (ทุกกะ)</h2>
+      <span class="section-note">เปรียบเทียบปริมาณงาน / ผลตรงเวลา-ล่าช้า ระหว่างประเภทรถ</span>
     </div>
     <div class="panel" id="panel-abcc-sp">
       <div class="panel-head"><div class="ph-title"><span class="dot"></span>ตารางเปรียบเทียบ AB / CC แยกตามกะ</div>
@@ -804,14 +754,14 @@ footer.appfoot{text-align:center;padding:30px 0 60px;color:var(--slate-500);font
 
     <div class="section-title-row">
       <h2><span class="num">1</span> Dashboard สรุปงานทั้ง 3 กะ</h2>
-      <span class="section-note">ภาพรวมรถที่ต้องตรวจสอบ / ผลตรงเวลา-ล่าช้า / ค่าปรับ</span>
+      <span class="section-note">ภาพรวมรถที่ต้องตรวจสอบ / ผลตรงเวลา-ล่าช้า</span>
     </div>
     <div class="kpi-grid" id="kpi-shiftaction"></div>
     <div class="section-note" id="sa-reconcile-note" style="margin-top:8px;display:block;"></div>
 
     <div class="section-title-row">
       <h2><span class="num">2</span> รายละเอียดแต่ละกะ — คลิกตัวเลขเพื่อดูรายชื่อรถ</h2>
-      <span class="section-note">คลิกได้ทุกค่า: จำนวนรถ / ตรงเวลา / ล่าช้า / ค่าปรับ</span>
+      <span class="section-note">คลิกได้ทุกค่า: จำนวนรถ / ตรงเวลา / ล่าช้า</span>
     </div>
     <div id="shiftaction-cards"></div>
 
@@ -819,7 +769,7 @@ footer.appfoot{text-align:center;padding:30px 0 60px;color:var(--slate-500);font
       <h2><span class="num">3</span> เปรียบเทียบ 3 กะ (AB vs CC)</h2>
     </div>
     <div class="panel" id="panel-sa-compare">
-      <div class="panel-head"><div class="ph-title"><span class="dot"></span>อัตราตรงเวลา/ล่าช้า และค่าปรับ แยกกะและประเภทรถ</div>
+      <div class="panel-head"><div class="ph-title"><span class="dot"></span>อัตราตรงเวลา/ล่าช้า แยกกะและประเภทรถ</div>
         <div class="panel-tools">
           <button class="tool-btn" onclick="exportTableExcel('tbl-sa-compare','Shift_ABCC_Compare')">⇩</button>
           <button class="tool-btn" onclick="exportSectionImage('panel-sa-compare')">📷</button>
@@ -863,14 +813,39 @@ footer.appfoot{text-align:center;padding:30px 0 60px;color:var(--slate-500);font
   <div class="tabpage" id="tab-dailyperf">
 
     <div class="section-title-row">
-      <h2><span class="num">1</span> Dashboard สรุปแนวโน้มรายวัน</h2>
+      <h2><span class="num">1</span> Dashboard สรุปแนวโน้มรายวัน (วันจันทร์–ศุกร์)</h2>
       <span class="section-note" id="dp-range-note"></span>
     </div>
     <div class="kpi-grid" id="kpi-dailyperf"></div>
     <div class="section-note" id="dp-reconcile-note" style="margin-top:8px;display:block;"></div>
 
     <div class="section-title-row">
-      <h2><span class="num">2</span> เที่ยววิ่งรายวัน — ตรงเวลา vs ล่าช้า</h2>
+      <h2><span class="num">2</span> สรุปรายสัปดาห์ (จันทร์–ศุกร์ ตามปฏิทินไทย) — ติดตามความคืบหน้า</h2>
+      <span class="section-note" id="wk-range-note"></span>
+    </div>
+    <div class="kpi-grid" id="kpi-weekly"></div>
+    <div class="panel" id="panel-dp-weekly" style="margin-top:14px;">
+      <div class="panel-head"><div class="ph-title"><span class="dot"></span>ตารางเปรียบเทียบรายสัปดาห์ — ▲▼ เขียว = ดีขึ้น, แดง = แย่ลง (เทียบสัปดาห์ก่อนหน้า)</div>
+        <div class="panel-tools">
+          <button class="tool-btn" onclick="exportTableExcel('tbl-dp-weekly','Weekly_Performance')" title="Export Excel">⇩</button>
+          <button class="tool-btn" onclick="exportSectionImage('panel-dp-weekly')" title="Export JPG">📷</button>
+          <button class="tool-btn" onclick="togglePanel('panel-dp-weekly')" title="ขยาย/ย่อ">⤢</button>
+        </div>
+      </div>
+      <div class="panel-body">
+        <div class="table-scroll" style="max-height:340px;"><table class="dt" id="tbl-dp-weekly"></table></div>
+        <div class="insight-box" id="insight-dp-weekly"></div>
+        <div class="chart-grid2" style="margin-top:14px;">
+          <div class="chart-box tall"><canvas id="chart-wk-counts"></canvas></div>
+          <div class="chart-box tall"><canvas id="chart-wk-pct"></canvas></div>
+          <div class="chart-box tall"><canvas id="chart-wk-shift"></canvas></div>
+          <div class="chart-box tall"><canvas id="chart-wk-delay"></canvas></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-title-row">
+      <h2><span class="num">3</span> เที่ยววิ่งรายวัน — ตรงเวลา vs ล่าช้า</h2>
     </div>
     <div class="panel" id="panel-dp-daily">
       <div class="panel-head"><div class="ph-title"><span class="dot"></span>จำนวนเที่ยวรายวัน แยกผลตรงเวลา/ล่าช้า</div>
@@ -890,7 +865,7 @@ footer.appfoot{text-align:center;padding:30px 0 60px;color:var(--slate-500);font
     </div>
 
     <div class="section-title-row">
-      <h2><span class="num">3</span> แนวโน้มสะสม (Cumulative) และ % ตรงเวลารายวัน</h2>
+      <h2><span class="num">4</span> แนวโน้มสะสม (Cumulative) และ % ตรงเวลารายวัน</h2>
     </div>
     <div class="panel" id="panel-dp-cumulative">
       <div class="panel-head"><div class="ph-title"><span class="dot"></span>% ตรงเวลาสะสม เทียบรายวัน — ดูเทรนด์ดีขึ้น/แย่ลง</div>
@@ -906,7 +881,7 @@ footer.appfoot{text-align:center;padding:30px 0 60px;color:var(--slate-500);font
     </div>
 
     <div class="section-title-row">
-      <h2><span class="num">4</span> เปรียบเทียบเทรนด์ AB vs CC รายวัน</h2>
+      <h2><span class="num">5</span> เปรียบเทียบเทรนด์ AB vs CC รายวัน</h2>
     </div>
     <div class="panel" id="panel-dp-abcc">
       <div class="panel-head"><div class="ph-title"><span class="dot"></span>% ตรงเวลารายวัน แยก AB / CC</div>
@@ -919,7 +894,7 @@ footer.appfoot{text-align:center;padding:30px 0 60px;color:var(--slate-500);font
     </div>
 
     <div class="section-title-row">
-      <h2><span class="num">5</span> ตารางสรุปรายวัน (คลิกวันที่เพื่อดูรายละเอียด)</h2>
+      <h2><span class="num">6</span> ตารางสรุปรายวัน (คลิกวันที่เพื่อดูรายละเอียด)</h2>
     </div>
     <div class="panel" id="panel-dp-table">
       <div class="panel-head"><div class="ph-title"><span class="dot"></span>สรุปผลรายวันครบทุกมิติ</div>
@@ -961,22 +936,6 @@ footer.appfoot{text-align:center;padding:30px 0 60px;color:var(--slate-500);font
   </div>
 </div>
 
-<!-- Edit penalty modal -->
-<div class="modal-scrim" id="modal-edit">
-  <div class="modal-box narrow">
-    <div class="modal-head"><h3>แก้ไขค่าปรับ</h3><button onclick="closeModal('modal-edit')">✕</button></div>
-    <div class="modal-body">
-      <div class="kv-grid" id="edit-kv" style="grid-template-columns:1fr;"></div>
-      <div class="form-row"><label>ค่าปรับ (บาท)</label><input type="number" id="edit-amount"></div>
-      <div class="form-row"><label>เหตุผลการแก้ไข</label><textarea id="edit-reason" placeholder="ระบุเหตุผล..."></textarea></div>
-      <div class="form-row"><label>ผู้แก้ไข</label><input type="text" id="edit-editor" placeholder="ชื่อผู้แก้ไข"></div>
-    </div>
-    <div class="modal-foot">
-      <button class="btn" onclick="closeModal('modal-edit')">ยกเลิก</button>
-      <button class="btn primary" onclick="saveEdit()">💾 Save และคำนวณใหม่</button>
-    </div>
-  </div>
-</div>
 
 <!-- Edit action-log modal -->
 <div class="modal-scrim" id="modal-action">
@@ -1006,53 +965,33 @@ footer.appfoot{text-align:center;padding:30px 0 60px;color:var(--slate-500);font
 </script>
 <script>/* ============ HT Fleet Performance Dashboard — mockup app logic ============ */
 
-let DATA = RAW_DATA.map((r, i) => ({ ...r, idx: i }));
-
-/* ============ กติกาค่าปรับ (แก้ไขที่นี่ที่เดียว) ============
-   - วัดจาก "นาทีล่าช้า" = เวลาจริง (GPS) − เวลามาตรฐาน
-   - ล่าช้า ≤ 60 นาที  → ไม่ปรับ   (ผ่อนผัน 30 นาที + อีก 30 นาที)
-   - ล่าช้า > 60 นาที  → 500 บาท   (เกิน 30 นาทีไป 30 นาที)
-   - ล่าช้า > 90 นาที  → 2,000 บาท (เกิน 30 นาทีไป 60 นาที)
-   - ปรับสูงสุด 1 ครั้ง / ทะเบียน / วัน → เลือกเที่ยวที่ค่าปรับสูงสุดของวันนั้น */
-const PENALTY_RULES = { tier1Over: 60, tier1Amount: 500, tier2Over: 90, tier2Amount: 2000 };
-function tierPenalty(delayMin){
-  if(delayMin===null || delayMin===undefined || isNaN(delayMin)) return 0;
-  if(delayMin > PENALTY_RULES.tier2Over) return PENALTY_RULES.tier2Amount;
-  if(delayMin > PENALTY_RULES.tier1Over) return PENALTY_RULES.tier1Amount;
-  return 0;
+/* ============ เตรียมข้อมูล: ตัดวันเสาร์–อาทิตย์ออกทั้งหมด (ไม่นำมาคำนวณทุกหน้า ทุกชีท) ============
+   วันที่อ้างอิง = วันที่ถึงปลายทางจริง (ถ้าไม่มีใช้เวลาออกต้นทาง / วันที่ปล่อยใบรายการ ตามลำดับ) */
+const ACTION_DELAY_OVER = 60;   // รายการ Action: ล่าช้าเกิน 60 นาที
+const TH_DAYS = ['อาทิตย์','จันทร์','อังคาร','พุธ','พฤหัสบดี','ศุกร์','เสาร์'];
+const TH_DAYS_SHORT = ['อา.','จ.','อ.','พ.','พฤ.','ศ.','ส.'];
+const TH_MONTHS = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+function refDateOf(r){ return dateOnly(r.arr_dt) || dateOnly(r.dep_dt) || dateOnly(r.dispatch_dt); }
+function dowOf(dateStr){ const [y,m,d]=dateStr.split('-').map(Number); return new Date(Date.UTC(y,m-1,d)).getUTCDay(); } // 0=อาทิตย์ … 6=เสาร์ (ไม่ขึ้นกับ timezone)
+function isWeekend(dateStr){ if(!dateStr) return false; const w=dowOf(dateStr); return w===0 || w===6; }
+let WEEKEND_EXCLUDED = 0;
+function prepareData(records){
+  const kept = records.filter(r=>!isWeekend(refDateOf(r)));
+  WEEKEND_EXCLUDED = records.length - kept.length;
+  return kept.map((r,i)=>({ ...r, idx:i }));
 }
-function applyPenaltyRules(records){
-  records.forEach(r=>{
-    r.penalty_raw = r.result==='ล่าช้า' ? tierPenalty(r.diff_min) : 0; // ตามเกณฑ์ก่อนจำกัด 1 ครั้ง/วัน
-    r.penalty = r.penalty_raw; r.penalty_capped = false; r.penalty_day_n = 1;
-  });
-  const groups = {};
-  records.forEach(r=>{
-    if(r.penalty_raw<=0) return;
-    const d = dateOnly(r.arr_dt) || dateOnly(r.dep_dt) || dateOnly(r.dispatch_dt) || '-';
-    (groups[r.plate+'|'+d] = groups[r.plate+'|'+d] || []).push(r);
-  });
-  Object.values(groups).forEach(g=>{
-    g.forEach(r=>r.penalty_day_n = g.length);
-    if(g.length<2) return;
-    g.sort((a,b)=> b.penalty_raw-a.penalty_raw || (b.diff_min||0)-(a.diff_min||0) || a.idx-b.idx);
-    g.forEach((r,i)=>{ if(i>0){ r.penalty = 0; r.penalty_capped = true; } });
-  });
-}
-applyPenaltyRules(DATA);
+let DATA = prepareData(RAW_DATA);
 const SHIFT_LABEL = { A: '05:00–12:59', B: '13:00–20:59', C: '21:00–04:59' };
 const SHIFT_COLOR = { A: '#3E7CB1', B: '#B4750F', C: '#5B4B93' };
 const COL_ONTIME = '#1C8A5A', COL_DELAY = '#C23B2E', COL_AB = '#2E5FA3', COL_CC = '#B4750F', COL_NAVY='#132540';
 
 let filters = { start: null, end: null, shift: 'ALL', type: 'ALL' };
-let penaltyOverrides = {}; // idx -> {amount, reason, editor}
 let chartRegistry = {};
 let editingIdx = null;
 
 /* ---------------- helpers ---------------- */
 function fmtInt(n){ if(n===null||n===undefined||isNaN(n)) return '—'; return Math.round(n).toLocaleString('en-US'); }
 function fmtPct(n){ if(n===null||n===undefined||isNaN(n)) return '—'; return (n*100).toFixed(1)+'%'; }
-function fmtBaht(n){ if(n===null||n===undefined||isNaN(n)) return '—'; return Math.round(n).toLocaleString('en-US')+' ฿'; }
 function fmtDT(iso){ if(!iso) return '—'; const d=new Date(iso); const pad=x=>String(x).padStart(2,'0'); return `${pad(d.getDate())}/${pad(d.getMonth()+1)} ${pad(d.getHours())}:${pad(d.getMinutes())}`; }
 function dateOnly(iso){ if(!iso) return null; return iso.slice(0,10); }
 function safe(v){ return (v===null||v===undefined||v==='') ? '—' : v; }
@@ -1068,10 +1007,6 @@ function passesGlobal(r){
   return true;
 }
 function getData(){ return DATA.filter(passesGlobal); }
-function effPenalty(r){
-  const o = penaltyOverrides[r.idx];
-  return o ? o.amount : r.penalty;
-}
 function resultPill(res){
   if(res==='ตรงเวลา') return `<span class="pill pill-ontime">ตรงเวลา</span>`;
   if(res==='ล่าช้า') return `<span class="pill pill-delay">ล่าช้า</span>`;
@@ -1090,8 +1025,6 @@ function initFilterBar(){
   const minD = dates[0], maxD = dates[dates.length-1];
   document.getElementById('f-start').value = minD;
   document.getElementById('f-end').value = maxD;
-  document.getElementById('pen-start').value = minD;
-  document.getElementById('pen-end').value = maxD;
   filters.start = minD; filters.end = maxD;
 
   document.getElementById('f-start').onchange = e => { filters.start = e.target.value; renderAll(); };
@@ -1128,16 +1061,134 @@ function initFilterBar(){
   });
 }
 
-/* ---------------- chart helper ---------------- */
+/* ---------------- chart helper + สไตล์กราฟ + ตัวเลขบนกราฟ ---------------- */
+const FONT = { family: "system-ui, -apple-system, 'Segoe UI', Roboto, 'Noto Sans Thai', Arial, sans-serif", size: 13 };
+const CLR_GOOD = '#128A4F', CLR_BAD = '#C62828', CLR_NEUTRAL = '#1B2A41';
+Chart.defaults.font = FONT;
+Chart.defaults.color = '#33445F';
+Chart.defaults.animation.duration = 450;
+Chart.defaults.layout.padding = { top: 26, right: 20, left: 6, bottom: 6 };
+Object.assign(Chart.defaults.plugins.legend.labels, { usePointStyle:true, pointStyle:'circle', boxWidth:9, boxHeight:9, padding:16, font:{ size:13, weight:'600' } });
+Chart.defaults.plugins.title.font = { size:14, weight:'700' };
+Chart.defaults.plugins.title.color = '#132540';
+Chart.defaults.plugins.title.padding = { top:2, bottom:14 };
+Object.assign(Chart.defaults.plugins.tooltip, { backgroundColor:'rgba(19,37,64,.95)', padding:11, cornerRadius:8, titleFont:{ size:13, weight:'700' }, bodyFont:{ size:13 }, boxPadding:4 });
+Chart.defaults.elements.bar.borderRadius = 6;
+Chart.defaults.elements.bar.borderSkipped = false;
+Chart.defaults.elements.line.tension = 0.35;
+Chart.defaults.elements.line.borderWidth = 3;
+Chart.defaults.elements.point.radius = 5;
+Chart.defaults.elements.point.hoverRadius = 7;
+Chart.defaults.scale.grid.color = 'rgba(90,107,133,.16)';
+Chart.defaults.scale.ticks.color = '#33445F';
+Chart.defaults.scale.ticks.font = { size:12, weight:'600' };
+Chart.defaults.datasets.bar.maxBarThickness = 58;
+Chart.defaults.datasets.bar.categoryPercentage = 0.74;
+Chart.defaults.datasets.bar.barPercentage = 0.88;
+
+function labelText(ds, v){
+  if(ds.labelFormat==='pct') return v.toFixed(1)+'%';
+  return Math.round(v).toLocaleString('en-US');
+}
+// สีตัวเลข: เขียว = ดีขึ้น / ตรงเวลา, แดง = แย่ลง / ล่าช้า
+function labelColorFor(ds, i, chart){
+  if(typeof ds.labelColor==='function') return ds.labelColor(i, chart);
+  if(ds.labelMode==='ontime') return CLR_GOOD;
+  if(ds.labelMode==='delay') return CLR_BAD;
+  if(ds.labelMode==='trend'){
+    let k = i-1; while(k>=0 && (ds.data[k]===null || ds.data[k]===undefined)) k--;
+    if(k<0) return CLR_NEUTRAL;
+    const cur = ds.data[i], prev = ds.data[k];
+    if(cur===prev) return CLR_NEUTRAL;
+    const up = cur>prev; const good = ds.better==='down' ? !up : up;
+    return good ? CLR_GOOD : CLR_BAD;
+  }
+  return CLR_NEUTRAL;
+}
+const ValueLabels = {
+  id:'valueLabels',
+  afterDatasetsDraw(chart){
+    const ctx = chart.ctx, area = chart.chartArea, type = chart.config.type;
+    const horizontal = chart.options.indexAxis==='y';
+    const sc = chart.options.scales || {};
+    const stacked = !!((sc.x && sc.x.stacked) || (sc.y && sc.y.stacked));
+    chart.data.datasets.forEach((ds, di)=>{
+      const meta = chart.getDatasetMeta(di);
+      if(meta.hidden || ds.showLabels===false) return;
+      const dsType = ds.type || type;
+      const step = ds.data.length>24 ? 2 : 1;
+      const size = ds.labelSize || 13;
+      meta.data.forEach((el, i)=>{
+        const v = ds.data[i];
+        if(v===null || v===undefined || isNaN(v) || i%step) return;
+        ctx.save();
+        ctx.font = `800 ${size}px ${FONT.family}`;
+        ctx.lineJoin = 'round';
+        const color = labelColorFor(ds, i, chart);
+        const draw = (text, x, y, align, base, inside) => {
+          ctx.textAlign = align; ctx.textBaseline = base;
+          if(inside){ ctx.lineWidth = 3; ctx.strokeStyle = 'rgba(0,0,0,.45)'; ctx.strokeText(text, x, y); ctx.fillStyle = '#fff'; }
+          else { ctx.lineWidth = 5; ctx.strokeStyle = '#fff'; ctx.strokeText(text, x, y); ctx.fillStyle = color; }
+          ctx.fillText(text, x, y);
+        };
+        if(dsType==='bar'){
+          const pr = el.getProps(['x','y','base'], true);
+          const top = Math.min(pr.y, pr.base), bottom = Math.max(pr.y, pr.base);
+          const text = labelText(ds, v);
+          if(!horizontal){
+            if(stacked || ds.labelMode==='inside'){ if(bottom-top < 18) { ctx.restore(); return; } draw(text, pr.x, (top+bottom)/2, 'center', 'middle', true); }
+            else draw(text, pr.x, top-6, 'center', 'bottom', false);
+          } else {
+            const end = pr.x, start = pr.base;
+            if(stacked || ds.labelMode==='inside'){ if(Math.abs(end-start) < 30){ ctx.restore(); return; } draw(text, (end+start)/2, pr.y, 'center', 'middle', true); }
+            else {
+              const w = ctx.measureText(text).width;
+              if(end + 8 + w > area.right + 14) draw(text, end-8, pr.y, 'right', 'middle', true);
+              else draw(text, end+8, pr.y, 'left', 'middle', false);
+            }
+          }
+        } else if(dsType==='line'){
+          const pr = el.getProps(['x','y'], true);
+          const pos = ds.labelPos || (di%2 ? 'bottom' : 'top');
+          draw(labelText(ds, v), pr.x, pos==='top' ? pr.y-11 : pr.y+11, 'center', pos==='top' ? 'bottom' : 'top', false);
+        } else if(dsType==='pie' || dsType==='doughnut'){
+          const total = ds.data.reduce((a,b)=>a+(+b||0),0);
+          const pct = total ? v/total*100 : 0;
+          if(pct < 4){ ctx.restore(); return; }
+          const pos = el.tooltipPosition();
+          draw(Math.round(v).toLocaleString('en-US'), pos.x, pos.y-8, 'center', 'middle', true);
+          ctx.font = `700 ${size-1}px ${FONT.family}`;
+          draw(pct.toFixed(1)+'%', pos.x, pos.y+9, 'center', 'middle', true);
+        }
+        ctx.restore();
+      });
+    });
+  }
+};
+Chart.register(ValueLabels);
+
 function mkChart(id, config){
   if(chartRegistry[id]) chartRegistry[id].destroy();
+  const t = config.type;
+  config.data.datasets.forEach(ds=>{
+    if((ds.type||t)==='line'){
+      if(ds.pointBackgroundColor===undefined) ds.pointBackgroundColor = '#fff';
+      if(ds.pointBorderColor===undefined) ds.pointBorderColor = ds.borderColor;
+      if(ds.pointBorderWidth===undefined) ds.pointBorderWidth = 3;
+    }
+  });
+  if(t==='bar' || t==='line'){
+    const o = config.options = config.options || {};
+    o.scales = o.scales || {};
+    const vk = o.indexAxis==='y' ? 'x' : 'y';
+    const sc = o.scales[vk] = o.scales[vk] || {};
+    if(sc.grace===undefined && sc.max===undefined) sc.grace = '14%';
+    if(t==='line'){ const xk = o.indexAxis==='y' ? 'y' : 'x'; const xs = o.scales[xk] = o.scales[xk] || {}; if(xs.offset===undefined) xs.offset = true; }
+  }
   const ctx = document.getElementById(id).getContext('2d');
   chartRegistry[id] = new Chart(ctx, config);
   return chartRegistry[id];
 }
-const FONT = { family: "system-ui, -apple-system, 'Segoe UI', Roboto, 'Noto Sans Thai', Arial, sans-serif", size: 11 };
-Chart.defaults.font = FONT;
-Chart.defaults.color = '#5A6B85';
 
 /* ============================================================
    OVERVIEW TAB
@@ -1147,16 +1198,14 @@ function renderOverview(){
   const withResult = data.filter(r=>r.result!=='—');
   const ontime = data.filter(r=>r.result==='ตรงเวลา');
   const delay = data.filter(r=>r.result==='ล่าช้า');
-  const totalPenalty = delay.reduce((s,r)=>s+effPenalty(r),0);
 
-  // ---- cross-sheet reconciliation note (computed live so numbers always match reality) ----
+  // ---- หมายเหตุเชื่อมโยงตัวเลขระหว่างชีท (คำนวณสดจากข้อมูลจริง) ----
   const withShift = data.filter(r=>r.shift);
   const noShift = data.length - withShift.length;
-  const shiftPenalty = withShift.filter(r=>r.result==='ล่าช้า').reduce((s,r)=>s+effPenalty(r),0);
-  const noShiftPenalty = totalPenalty - shiftPenalty;
   const withRegion = data.filter(r=>r.origin_region && r.origin_region!=='—' && r.dest_region && r.dest_region!=='—').length;
   document.getElementById('reconcile-note').innerHTML =
-    `🔗 <b>การเชื่อมโยงตัวเลขระหว่างชีท:</b> จากทั้งหมด <b>${fmtInt(data.length)} เที่ยว</b> (ยอดในหน้านี้) มี <b>${fmtInt(withShift.length)} เที่ยว</b> ที่มีเวลาถึงปลายทางจริงและจำแนกกะได้ — ตัวเลขนี้คือฐานที่ใช้ในชีท <b>Shift Performance / Shift Action / Daily Performance</b> ทั้งหมด (ตรงกันทุกชีท) ส่วนอีก ${fmtInt(noShift)} เที่ยวยังไม่มีข้อมูลเวลาถึงปลายทาง จึงไม่ถูกจำแนกกะ แต่ยังรวมอยู่ในยอด Overview และตาราง "ไม่ระบุกะ" ของค่าปรับ (${fmtBaht(shiftPenalty)} + ${fmtBaht(noShiftPenalty)} = ${fmtBaht(totalPenalty)}) · ในแผนภูมิ Matrix ต้นทาง×ปลายทาง นับเฉพาะ ${fmtInt(withRegion)} เที่ยวที่ระบุภาคครบทั้งต้นทางและปลายทาง (เป็นสับเซตของ ${fmtInt(withShift.length)} เที่ยวข้างต้น) · A = 05:00–12:59, B = 13:00–20:59, C = 21:00–04:59`;
+    `📅 <b>คำนวณเฉพาะวันจันทร์–ศุกร์:</b> ระบบตัดข้อมูลวันเสาร์และวันอาทิตย์ออกทั้งหมด (${fmtInt(WEEKEND_EXCLUDED)} เที่ยว) ไม่นำมาคำนวณในทุกหน้า ทุกชีท ทุกตาราง (วันที่อ้างอิง = วันที่ถึงปลายทางจริง)<br>
+     🔗 <b>การเชื่อมโยงตัวเลขระหว่างชีท:</b> จากทั้งหมด <b>${fmtInt(data.length)} เที่ยว</b> (ยอดในหน้านี้) มี <b>${fmtInt(withShift.length)} เที่ยว</b> ที่มีเวลาถึงปลายทางจริงและจำแนกกะได้ — เป็นฐานที่ใช้ในชีท <b>Shift Performance / Shift Action / Daily Performance</b> (ตรงกันทุกชีท) ส่วนอีก ${fmtInt(noShift)} เที่ยวยังไม่มีข้อมูลเวลาถึงปลายทาง จึงไม่ถูกจำแนกกะ · ใน Matrix ต้นทาง×ปลายทาง นับเฉพาะ ${fmtInt(withRegion)} เที่ยวที่ระบุภาคครบทั้งต้นทางและปลายทาง · กะ A = 05:00–12:59, B = 13:00–20:59, C = 21:00–04:59`;
 
   document.getElementById('ov-filtered-note').textContent =
     `แสดงผล ${fmtInt(data.length)} เที่ยว จาก ${fmtInt(DATA.length)} เที่ยว (ตามตัวกรองด้านบน)`;
@@ -1167,7 +1216,6 @@ function renderOverview(){
     { label:'ตรงเวลา', value: fmtInt(ontime.length), sub: fmtPct(ontime.length/(withResult.length||1))+' ของที่มีผล', cls:'accent-ontime', subcls:'pos', click:"openKPIOverviewDrill('ontime')" },
     { label:'ล่าช้า', value: fmtInt(delay.length), sub: fmtPct(delay.length/(withResult.length||1))+' ของที่มีผล', cls:'accent-delay', subcls:'neg', click:"openKPIOverviewDrill('delay')" },
     { label:'นาทีล่าช้าเฉลี่ย', value: fmtInt(avg(delay.map(r=>r.diff_min))), sub:'นาที / เที่ยวล่าช้า', cls:'accent-delay', click:"openKPIOverviewDrill('delay')" },
-    { label:'ค่าปรับรวม (ประเมิน)', value: fmtBaht(totalPenalty), sub: `${fmtInt(delay.filter(r=>effPenalty(r)>0).length)} เที่ยวมีค่าปรับ`, cls:'accent-delay', click:"openKPIOverviewDrill('penalty')" },
   ];
   document.getElementById('kpi-overview').innerHTML = kpis.map(k=>`
     <div class="kpi-card ${k.cls}" style="cursor:pointer;" onclick="${k.click}">
@@ -1204,7 +1252,6 @@ function computeABCC(recs){
       onPct: on/((on+de)||1),
       dePct: de/((on+de)||1),
       avgDelay: avg(sub.filter(r=>r.result==='ล่าช้า').map(r=>r.diff_min)),
-      penalty: sub.reduce((s,r)=>s+effPenalty(r),0),
     };
   });
   return out;
@@ -1218,7 +1265,6 @@ function abccCompareRowsHTML(stats){
     ['% ตรงเวลา', fmtPct(stats.AB.onPct), fmtPct(stats.CC.onPct)],
     ['% ล่าช้า', fmtPct(stats.AB.dePct), fmtPct(stats.CC.dePct)],
     ['นาทีล่าช้าเฉลี่ย', fmtInt(stats.AB.avgDelay), fmtInt(stats.CC.avgDelay)],
-    ['ค่าปรับรวม', fmtBaht(stats.AB.penalty), fmtBaht(stats.CC.penalty)],
   ];
   return `<thead><tr><th>ตัวชี้วัด</th><th class="num">AB</th><th class="num">CC</th></tr></thead>
     <tbody>${rows.map(r=>`<tr><td>${r[0]}</td><td class="num">${r[1]}</td><td class="num">${r[2]}</td></tr>`).join('')}</tbody>`;
@@ -1227,7 +1273,7 @@ function abccInsightText(stats){
   const better = stats.AB.onPct >= stats.CC.onPct ? 'AB' : 'CC';
   const worse = better==='AB' ? 'CC' : 'AB';
   const gap = Math.abs(stats.AB.onPct - stats.CC.onPct);
-  return `<b>วิเคราะห์:</b> ประเภท <b>${better}</b> รักษาเวลาได้ดีกว่า <b>${worse}</b> อยู่ ${fmtPct(gap)} (${better} ${fmtPct(stats[better].onPct)} เทียบกับ ${worse} ${fmtPct(stats[worse].onPct)}) · ค่าปรับสะสม AB ${fmtBaht(stats.AB.penalty)} เทียบ CC ${fmtBaht(stats.CC.penalty)} — ${stats.AB.penalty>stats.CC.penalty?'AB':'CC'} มีภาระค่าปรับสูงกว่า ควรให้ความสำคัญกับการติดตามประเภทนี้เป็นพิเศษ`;
+  return `<b>วิเคราะห์:</b> ประเภท <b>${better}</b> รักษาเวลาได้ดีกว่า <b>${worse}</b> อยู่ ${fmtPct(gap)} (${better} ${fmtPct(stats[better].onPct)} เทียบกับ ${worse} ${fmtPct(stats[worse].onPct)}) · ล่าช้าเฉลี่ย AB ${fmtInt(stats.AB.avgDelay)} นาที เทียบ CC ${fmtInt(stats.CC.avgDelay)} นาที — ${(stats.AB.avgDelay||0)>(stats.CC.avgDelay||0)?'AB':'CC'} ล่าช้าเฉลี่ยสูงกว่า ควรให้ความสำคัญกับการติดตามประเภทนี้เป็นพิเศษ`;
 }
 function renderABCCOverview(data){
   const stats = computeABCC(data);
@@ -1236,23 +1282,24 @@ function renderABCCOverview(data){
 }
 function renderABCCShiftPerf(data){
   const rows = ['A','B','C'].map(S=>{
-    const s = computeABCC(data.filter(r=>r.shift===S));
-    return { S, s };
+    const st = computeABCC(data.filter(r=>r.shift===S));
+    return { S, s: st };
   });
+  const t = computeABCC(data.filter(r=>r.shift));
   document.getElementById('tbl-abcc-sp').innerHTML = `
-    <thead><tr><th>กะ</th><th class="num">AB เที่ยว</th><th class="num">AB %ตรงเวลา</th><th class="num">CC เที่ยว</th><th class="num">CC %ตรงเวลา</th><th class="num">ค่าปรับ AB</th><th class="num">ค่าปรับ CC</th></tr></thead>
-    <tbody>${rows.map(r=>`<tr><td>กะ ${r.S}</td><td class="num">${fmtInt(r.s.AB.total)}</td><td class="num">${fmtPct(r.s.AB.onPct)}</td><td class="num">${fmtInt(r.s.CC.total)}</td><td class="num">${fmtPct(r.s.CC.onPct)}</td><td class="num">${fmtInt(r.s.AB.penalty)}</td><td class="num">${fmtInt(r.s.CC.penalty)}</td></tr>`).join('')}</tbody>
-    <tfoot><tr><td>รวม</td><td class="num">${rows.reduce((s,r)=>s+r.s.AB.total,0)}</td><td class="num">-</td><td class="num">${rows.reduce((s,r)=>s+r.s.CC.total,0)}</td><td class="num">-</td><td class="num">${rows.reduce((s,r)=>s+r.s.AB.penalty,0)}</td><td class="num">${rows.reduce((s,r)=>s+r.s.CC.penalty,0)}</td></tr></tfoot>`;
+    <thead><tr><th>#</th><th>กะ</th><th class="num">AB เที่ยว</th><th class="num">AB ตรงเวลา</th><th class="num">AB ล่าช้า</th><th class="num">AB %ตรงเวลา</th><th class="num">CC เที่ยว</th><th class="num">CC ตรงเวลา</th><th class="num">CC ล่าช้า</th><th class="num">CC %ตรงเวลา</th></tr></thead>
+    <tbody>${rows.map((r,i)=>`<tr><td>${i+1}</td><td>กะ ${r.S}</td><td class="num">${fmtInt(r.s.AB.total)}</td><td class="num txt-ontime">${fmtInt(r.s.AB.on)}</td><td class="num txt-delay">${fmtInt(r.s.AB.de)}</td><td class="num">${fmtPct(r.s.AB.onPct)}</td><td class="num">${fmtInt(r.s.CC.total)}</td><td class="num txt-ontime">${fmtInt(r.s.CC.on)}</td><td class="num txt-delay">${fmtInt(r.s.CC.de)}</td><td class="num">${fmtPct(r.s.CC.onPct)}</td></tr>`).join('')}</tbody>
+    <tfoot><tr><td colspan="2">รวม</td><td class="num">${fmtInt(t.AB.total)}</td><td class="num txt-ontime">${fmtInt(t.AB.on)}</td><td class="num txt-delay">${fmtInt(t.AB.de)}</td><td class="num">${fmtPct(t.AB.onPct)}</td><td class="num">${fmtInt(t.CC.total)}</td><td class="num txt-ontime">${fmtInt(t.CC.on)}</td><td class="num txt-delay">${fmtInt(t.CC.de)}</td><td class="num">${fmtPct(t.CC.onPct)}</td></tr></tfoot>`;
+  const abV = rows.map(r=>+(r.s.AB.onPct*100).toFixed(1)), ccV = rows.map(r=>+(r.s.CC.onPct*100).toFixed(1));
   mkChart('chart-abcc-sp', {
     type:'bar',
     data:{ labels: rows.map(r=>'กะ '+r.S), datasets:[
-      { label:'AB %ตรงเวลา', data: rows.map(r=>+(r.s.AB.onPct*100).toFixed(1)), backgroundColor: COL_AB },
-      { label:'CC %ตรงเวลา', data: rows.map(r=>+(r.s.CC.onPct*100).toFixed(1)), backgroundColor: COL_CC },
+      { label:'AB %ตรงเวลา', data: abV, backgroundColor: COL_AB, labelFormat:'pct', labelColor:(i)=> abV[i]>=ccV[i]?'#128A4F':'#C62828' },
+      { label:'CC %ตรงเวลา', data: ccV, backgroundColor: COL_CC, labelFormat:'pct', labelColor:(i)=> ccV[i]>=abV[i]?'#128A4F':'#C62828' },
     ]},
-    options:{ responsive:true, maintainAspectRatio:false, plugins:{title:{display:true,text:'% ตรงเวลา AB vs CC แยกกะ',font:{size:11,weight:'600'}}}, scales:{y:{beginAtZero:true,max:100}} }
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{title:{display:true,text:'% ตรงเวลา AB vs CC แยกกะ (เขียว = สูงกว่า, แดง = ต่ำกว่า)'}}, scales:{y:{beginAtZero:true,max:100}} }
   });
-  const overallStats = computeABCC(data);
-  document.getElementById('insight-abcc-sp').innerHTML = abccInsightText(overallStats);
+  document.getElementById('insight-abcc-sp').innerHTML = abccInsightText(computeABCC(data));
 }
 
 function renderShiftCards(data){
@@ -1285,18 +1332,18 @@ function renderTrendCharts(data){
   const dates = Object.keys(byDate).sort();
   mkChart('chart-daily-line', {
     type:'line',
-    data:{ labels: dates, datasets:[
-      { label:'ตรงเวลา', data: dates.map(d=>byDate[d].on), borderColor: COL_ONTIME, backgroundColor:COL_ONTIME, tension:.3 },
-      { label:'ล่าช้า', data: dates.map(d=>byDate[d].de), borderColor: COL_DELAY, backgroundColor:COL_DELAY, tension:.3 },
+    data:{ labels: dates.map(d=>`${TH_DAYS_SHORT[dowOf(d)]} ${d.slice(5)}`), datasets:[
+      { label:'ตรงเวลา', data: dates.map(d=>byDate[d].on), borderColor: COL_ONTIME, backgroundColor:COL_ONTIME, labelMode:'trend', better:'up', labelPos:'bottom' },
+      { label:'ล่าช้า', data: dates.map(d=>byDate[d].de), borderColor: COL_DELAY, backgroundColor:COL_DELAY, labelMode:'trend', better:'down', labelPos:'top' },
     ]},
-    options:{ responsive:true, maintainAspectRatio:false, plugins:{title:{display:true,text:'เที่ยววิ่งรายวัน: ตรงเวลา vs ล่าช้า', font:{size:11,weight:'600'}}}, scales:{y:{beginAtZero:true}} }
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{title:{display:true,text:'เที่ยววิ่งรายวัน (จ.–ศ.): ตรงเวลา vs ล่าช้า — เขียว = ดีขึ้น, แดง = แย่ลง'}}, scales:{y:{beginAtZero:true}} }
   });
 
   const shiftCounts = ['A','B','C'].map(S=>data.filter(r=>r.shift===S).length);
   mkChart('chart-shift-pie', {
     type:'doughnut',
     data:{ labels:['กะ A','กะ B','กะ C'], datasets:[{ data: shiftCounts, backgroundColor:[SHIFT_COLOR.A,SHIFT_COLOR.B,SHIFT_COLOR.C] }] },
-    options:{ responsive:true, maintainAspectRatio:false, plugins:{title:{display:true,text:'สัดส่วนเที่ยวถึงปลายทางตามกะ', font:{size:11,weight:'600'}}} }
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{title:{display:true,text:'สัดส่วนเที่ยวถึงปลายทางตามกะ'}} }
   });
 
   const abOn = data.filter(r=>r.type==='AB'&&r.result==='ตรงเวลา').length, abDe = data.filter(r=>r.type==='AB'&&r.result==='ล่าช้า').length;
@@ -1304,10 +1351,10 @@ function renderTrendCharts(data){
   mkChart('chart-type-bar', {
     type:'bar',
     data:{ labels:['AB','CC'], datasets:[
-      { label:'ตรงเวลา', data:[abOn,ccOn], backgroundColor: COL_ONTIME },
-      { label:'ล่าช้า', data:[abDe,ccDe], backgroundColor: COL_DELAY },
+      { label:'ตรงเวลา', data:[abOn,ccOn], backgroundColor: COL_ONTIME, labelMode:'ontime' },
+      { label:'ล่าช้า', data:[abDe,ccDe], backgroundColor: COL_DELAY, labelMode:'delay' },
     ]},
-    options:{ responsive:true, maintainAspectRatio:false, plugins:{title:{display:true,text:'ตรงเวลา/ล่าช้า แยกประเภทรถ', font:{size:11,weight:'600'}}}, scales:{y:{beginAtZero:true}} }
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{title:{display:true,text:'ตรงเวลา/ล่าช้า แยกประเภทรถ'}}, scales:{y:{beginAtZero:true}} }
   });
 
   const busiestShift = ['A','B','C'].sort((a,b)=>data.filter(r=>r.shift===b).length-data.filter(r=>r.shift===a).length)[0];
@@ -1319,23 +1366,23 @@ function renderTrendCharts(data){
 function renderSeverity(data){
   const delay = data.filter(r=>r.result==='ล่าช้า' && r.diff_min!==null);
   const buckets = [
-    { key:'0-30', label:'ล่าช้า 0–30 นาที (ผ่อนผัน ไม่ปรับ)', test:d=>d<=30, color:'#F0C060' },
-    { key:'31-60', label:'ล่าช้า 31–60 นาที (ไม่ปรับ)', test:d=>d>30&&d<=60, color:'#E8A33D' },
-    { key:'61-90', label:'ล่าช้า 61–90 นาที (ปรับ 500฿)', test:d=>d>60&&d<=90, color:'#D9622B' },
-    { key:'90+', label:'ล่าช้ามากกว่า 90 นาที (ปรับ 2,000฿)', test:d=>d>90, color:COL_DELAY },
+    { key:'0-30', label:'ล่าช้า 0–30 นาที', test:d=>d<=30, color:'#F0C060' },
+    { key:'31-60', label:'ล่าช้า 31–60 นาที', test:d=>d>30&&d<=60, color:'#E8A33D' },
+    { key:'61-90', label:'ล่าช้า 61–90 นาที', test:d=>d>60&&d<=90, color:'#D9622B' },
+    { key:'90+', label:'ล่าช้ามากกว่า 90 นาที', test:d=>d>90, color:COL_DELAY },
   ];
   const rows = buckets.map(b=>{
     const recs = delay.filter(r=>b.test(r.diff_min));
-    return { ...b, count: recs.length, avgMin: avg(recs.map(r=>r.diff_min)), pen: recs.reduce((s,r)=>s+effPenalty(r),0) };
+    return { ...b, count: recs.length, avgMin: avg(recs.map(r=>r.diff_min)) };
   });
   document.getElementById('tbl-severity').innerHTML = `
-    <thead><tr><th>#</th><th>ระดับความรุนแรง</th><th class="num">จำนวนเที่ยว</th><th class="num">% ของเที่ยวล่าช้า</th><th class="num">นาทีล่าช้าเฉลี่ย</th><th class="num">ค่าปรับรวม</th></tr></thead>
-    <tbody>${rows.map((r,i)=>`<tr><td>${i+1}</td><td>${r.label}</td><td class="num"><a class="clickable-val" onclick="openSeverityDrill('${r.key}')">${fmtInt(r.count)}</a></td><td class="num">${fmtPct(r.count/(delay.length||1))}</td><td class="num">${fmtInt(r.avgMin)}</td><td class="num">${fmtBaht(r.pen)}</td></tr>`).join('')}</tbody>
-    <tfoot><tr><td colspan="2">รวม</td><td class="num">${fmtInt(delay.length)}</td><td class="num">100.0%</td><td class="num">${fmtInt(avg(delay.map(r=>r.diff_min)))}</td><td class="num">${fmtBaht(rows.reduce((s,r)=>s+r.pen,0))}</td></tr></tfoot>`;
+    <thead><tr><th>#</th><th>ระดับความรุนแรง</th><th class="num">จำนวนเที่ยว</th><th class="num">% ของเที่ยวล่าช้า</th><th class="num">นาทีล่าช้าเฉลี่ย</th></tr></thead>
+    <tbody>${rows.map((r,i)=>`<tr><td>${i+1}</td><td>${r.label}</td><td class="num"><a class="clickable-val" onclick="openSeverityDrill('${r.key}')">${fmtInt(r.count)}</a></td><td class="num">${fmtPct(r.count/(delay.length||1))}</td><td class="num">${fmtInt(r.avgMin)}</td></tr>`).join('')}</tbody>
+    <tfoot><tr><td colspan="2">รวม</td><td class="num">${fmtInt(delay.length)}</td><td class="num">100.0%</td><td class="num">${fmtInt(avg(delay.map(r=>r.diff_min)))}</td></tr></tfoot>`;
   mkChart('chart-severity', {
     type:'bar',
-    data:{ labels: rows.map(r=>r.key+' นาที'), datasets:[{ label:'จำนวนเที่ยว', data: rows.map(r=>r.count), backgroundColor: rows.map(r=>r.color) }] },
-    options:{ responsive:true, maintainAspectRatio:false, indexAxis:'y', plugins:{title:{display:true,text:'จำนวนเที่ยวตามระดับความรุนแรง', font:{size:11,weight:'600'}}, legend:{display:false}} }
+    data:{ labels: rows.map(r=>r.key+' นาที'), datasets:[{ label:'จำนวนเที่ยว', data: rows.map(r=>r.count), backgroundColor: rows.map(r=>r.color), labelMode:'delay' }] },
+    options:{ responsive:true, maintainAspectRatio:false, indexAxis:'y', plugins:{title:{display:true,text:'จำนวนเที่ยวตามระดับความรุนแรง'}, legend:{display:false}} }
   });
   const worst = rows.reduce((a,b)=>b.count>a.count?b:a, rows[0]);
   document.getElementById('insight-severity').innerHTML = `<b>สรุป:</b> กลุ่ม "${worst.label}" มีจำนวนเที่ยวมากที่สุด (${fmtInt(worst.count)} เที่ยว) — ควรเจาะลึกสาเหตุจากตาราง Top 20 เส้นทางด้านล่างเพื่อวางแผนแก้ไขจุดที่ล่าช้าซ้ำ`;
@@ -1452,8 +1499,8 @@ function renderRouteType(data){
     <tfoot><tr><td colspan="2">รวม (Top 20)</td><td class="num">${rows.reduce((s,g)=>s+g.total,0)}</td><td class="num txt-delay">${rows.reduce((s,g)=>s+g.delay,0)}</td><td class="num">${fmtPct(rows.reduce((s,g)=>s+g.delay,0)/(rows.reduce((s,g)=>s+g.total,0)||1))}</td><td class="num">${fmtInt(avg(rows.map(g=>g.avgDelay)))}</td></tr></tfoot>`;
   mkChart('chart-routetype', {
     type:'bar',
-    data:{ labels: rows.map(g=>g.name), datasets:[{ label:'เที่ยวล่าช้า', data: rows.map(g=>g.delay), backgroundColor: COL_DELAY }] },
-    options:{ responsive:true, maintainAspectRatio:false, indexAxis:'y', plugins:{legend:{display:false}, title:{display:true,text:'จำนวนเที่ยวล่าช้าตามประเภทเส้นทาง (Top 20)',font:{size:11,weight:'600'}}} }
+    data:{ labels: rows.map(g=>g.name), datasets:[{ label:'เที่ยวล่าช้า', data: rows.map(g=>g.delay), backgroundColor: COL_DELAY, labelMode:'delay' }] },
+    options:{ responsive:true, maintainAspectRatio:false, indexAxis:'y', plugins:{legend:{display:false}, title:{display:true,text:'จำนวนเที่ยวล่าช้าตามประเภทเส้นทาง (Top 20)'}} }
   });
 }
 
@@ -1482,7 +1529,6 @@ function renderShiftPerf(){
   renderSP1(data);
   renderSP2(data);
   renderSP3(data);
-  renderPenalty();
   renderABCCShiftPerf(data);
 }
 
@@ -1504,10 +1550,10 @@ function renderSP1(data){
   mkChart('chart-sp1', {
     type:'bar',
     data:{ labels: rows.map(r=>'กะ '+r.S), datasets:[
-      { label:'AB', data: rows.map(r=>r.ab), backgroundColor: COL_AB },
-      { label:'CC', data: rows.map(r=>r.cc), backgroundColor: COL_CC },
+      { label:'AB', data: rows.map(r=>r.ab), backgroundColor: COL_AB, labelMode:'inside' },
+      { label:'CC', data: rows.map(r=>r.cc), backgroundColor: COL_CC, labelMode:'inside' },
     ]},
-    options:{ responsive:true, maintainAspectRatio:false, plugins:{title:{display:true,text:'ปริมาณรถออกต้นทางจริง แยกกะ', font:{size:11,weight:'600'}}}, scales:{x:{stacked:true},y:{stacked:true,beginAtZero:true}} }
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{title:{display:true,text:'ปริมาณรถออกต้นทางจริง แยกกะ'}}, scales:{x:{stacked:true},y:{stacked:true,beginAtZero:true}} }
   });
   const busiest = rows.reduce((a,b)=>b.total>a.total?b:a, rows[0]);
   const bestOnTime = rows.reduce((a,b)=> (b.on/((b.on+b.de)||1)) > (a.on/((a.on+a.de)||1)) ? b:a, rows[0]);
@@ -1530,16 +1576,16 @@ function renderSP2(data){
   mkChart('chart-sp2-bar', {
     type:'bar',
     data:{ labels: rows.map(r=>'กะ '+r.S), datasets:[
-      { label:'ตรง PA', data: rows.map(r=>r.ab.on+r.cc.on), backgroundColor: COL_ONTIME },
-      { label:'ไม่ตรง PA', data: rows.map(r=>r.ab.de+r.cc.de), backgroundColor: COL_DELAY },
+      { label:'ตรง PA', data: rows.map(r=>r.ab.on+r.cc.on), backgroundColor: COL_ONTIME, labelMode:'ontime' },
+      { label:'ไม่ตรง PA', data: rows.map(r=>r.ab.de+r.cc.de), backgroundColor: COL_DELAY, labelMode:'delay' },
     ]},
-    options:{ responsive:true, maintainAspectRatio:false, plugins:{title:{display:true,text:'ปล่อยรถตรง PA แยกกะ',font:{size:11,weight:'600'}}} }
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{title:{display:true,text:'ปล่อยรถตรง PA แยกกะ'}} }
   });
   const totOn = rows.reduce((s,r)=>s+r.ab.on+r.cc.on,0), totDe = rows.reduce((s,r)=>s+r.ab.de+r.cc.de,0);
   mkChart('chart-sp2-pie', {
     type:'pie',
     data:{ labels:['ตรง PA','ไม่ตรง PA'], datasets:[{ data:[totOn,totDe], backgroundColor:[COL_ONTIME,COL_DELAY] }] },
-    options:{ responsive:true, maintainAspectRatio:false, plugins:{title:{display:true,text:'สัดส่วนรวมทั้งหมด',font:{size:11,weight:'600'}}} }
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{title:{display:true,text:'สัดส่วนรวมทั้งหมด'}} }
   });
 }
 
@@ -1558,132 +1604,10 @@ function renderSP3(data){
   document.getElementById('insight-sp3').innerHTML = `<b>วิเคราะห์:</b> กะ ${best.S} รักษาเวลาได้ดีที่สุด (${fmtPct(best.on/((best.on+best.de)||1))} ตรงเวลา) ในขณะที่กะ ${worst.S} มีสัดส่วนล่าช้าสูงสุด และล่าช้าเฉลี่ย ${fmtInt(worst.avgDelay)} นาที/เที่ยว — ควรทบทวนตารางเวลาและจุดเสี่ยงในกะ ${worst.S} เป็นลำดับแรก`;
 }
 
-/* ---------------- Penalty section ---------------- */
-function penFilter(r){
-  const start = document.getElementById('pen-start').value;
-  const end = document.getElementById('pen-end').value;
-  const shift = document.getElementById('pen-shift-ddl').value;
-  const type = document.getElementById('pen-type-ddl').value;
-  {
-    if(type!=='ALL' && r.type!==type) return false;
-    if(shift!=='ALL' && r.shift!==shift) return false;
-    const d = dateOnly(r.arr_dt);
-    if(start && d && d<start) return false;
-    if(end && d && d>end) return false;
-    return true;
-  }
-}
-function getPenaltyRecords(){
-  return DATA.filter(r=> r.result==='ล่าช้า' && (effPenalty(r)>0 || penaltyOverrides[r.idx]) && penFilter(r));
-}
-function getCappedRecords(){
-  return DATA.filter(r=> r.penalty_capped && !penaltyOverrides[r.idx] && penFilter(r));
-}
-function openCappedDrill(){
-  genericDrill('ล่าช้าเกิน 60 นาที แต่ไม่ถูกปรับ (ซ้ำวันเดียวกัน — ปรับเฉพาะเที่ยวที่สูงสุดของวัน)', getCappedRecords());
-}
-
-function renderPenalty(){
-  const recs = getPenaltyRecords().sort((a,b)=>effPenalty(b)-effPenalty(a));
-  const cappedN = getCappedRecords().length;
-  document.getElementById('pen-count-note').innerHTML = `พบ ${recs.length} เที่ยวที่มีค่าปรับ` + (cappedN? ` · <a class="clickable-val" onclick="openCappedDrill()">${cappedN} เที่ยวไม่ถูกปรับ (ซ้ำวัน)</a>` : '');
-  document.getElementById('tbl-penalty').innerHTML = `
-    <thead><tr><th>#</th><th>ทะเบียน</th><th>ประเภท</th><th>เส้นทาง</th><th>ต้นทาง</th><th>ปลายทาง</th><th>กะ</th><th class="num">ล่าช้า (นาที)</th><th class="num">ค่าปรับ (฿)</th><th>หมายเหตุแก้ไข</th><th></th></tr></thead>
-    <tbody>${recs.map((r,i)=>{
-      const o = penaltyOverrides[r.idx];
-      return `<tr>
-        <td>${i+1}</td>
-        <td>${plateLink(r.plate)}</td>
-        <td>${typePill(r.type)}</td>
-        <td>${safe(r.route)}</td>
-        <td>${safe(r.origin_region)}</td>
-        <td>${safe(r.dest_region)}</td>
-        <td>${safe(r.shift)}</td>
-        <td class="num txt-delay">+${fmtInt(r.diff_min)}</td>
-        <td class="num" style="font-weight:800;">${fmtInt(effPenalty(r))}</td>
-        <td style="font-size:11px;color:var(--slate-500);">${o? `แก้โดย ${o.editor||'-'}: ${o.reason||'-'}` : (r.penalty_day_n>1? `เที่ยวสูงสุดของวัน (ล่าช้า &gt;60 นาที รวม ${r.penalty_day_n} เที่ยว ปรับ 1 ครั้ง)` : '')}</td>
-        <td><button class="btn small" onclick="openEditPenalty(${r.idx})">✎ Edit</button></td>
-      </tr>`;
-    }).join('')}</tbody>
-    <tfoot><tr><td colspan="7">รวม</td><td class="num txt-delay">เฉลี่ย ${fmtInt(avg(recs.map(r=>r.diff_min)))}</td><td class="num">${fmtInt(recs.reduce((s,r)=>s+effPenalty(r),0))}</td><td colspan="2"></td></tr></tfoot>`;
-
-  // by plate
-  const byPlate = {};
-  recs.forEach(r=>{ byPlate[r.plate]=byPlate[r.plate]||{plate:r.plate,type:r.type,count:0,sum:0,routes:new Set(),origin:new Set(),dest:new Set()};
-    byPlate[r.plate].count++; byPlate[r.plate].sum+=effPenalty(r); byPlate[r.plate].routes.add(r.route); byPlate[r.plate].origin.add(r.origin_region); byPlate[r.plate].dest.add(r.dest_region); });
-  const plateRows = Object.values(byPlate).sort((a,b)=>b.sum-a.sum);
-  document.getElementById('tbl-penalty-byplate').innerHTML = `
-    <thead><tr><th>#</th><th>ทะเบียน</th><th>ประเภท</th><th class="num">จำนวนครั้ง</th><th class="num">ค่าปรับรวม (฿)</th><th>เส้นทางที่ล่าช้า</th><th>ภาคต้นทาง</th><th>ภาคปลายทาง</th></tr></thead>
-    <tbody>${plateRows.map((r,i)=>`<tr><td>${i+1}</td><td>${plateLink(r.plate)}</td><td>${typePill(r.type)}</td><td class="num">${r.count}</td><td class="num" style="font-weight:800;">${fmtInt(r.sum)}</td><td>${[...r.routes].join(', ')}</td><td>${[...r.origin].join(', ')}</td><td>${[...r.dest].join(', ')}</td></tr>`).join('')}</tbody>
-    <tfoot><tr><td colspan="3">รวม (${plateRows.length} ทะเบียน)</td><td class="num">${plateRows.reduce((s,r)=>s+r.count,0)}</td><td class="num">${fmtInt(plateRows.reduce((s,r)=>s+r.sum,0))}</td><td colspan="3"></td></tr></tfoot>`;
-
-  // by shift (+ unclassified bucket for trips without a valid arrival timestamp)
-  const shiftRows = ['A','B','C'].map(S=>{
-    const sr = recs.filter(r=>r.shift===S);
-    return { S, label:'กะ '+S, count: sr.length, sum: sr.reduce((s,r)=>s+effPenalty(r),0), color: SHIFT_COLOR[S] };
-  });
-  const unclass = recs.filter(r=>!r.shift);
-  if(unclass.length) shiftRows.push({ S:null, label:'ไม่ระบุกะ (ไม่มีเวลาถึงปลายทาง)', count: unclass.length, sum: unclass.reduce((s,r)=>s+effPenalty(r),0), color: '#8590A3' });
-  const grandSum = shiftRows.reduce((s,r)=>s+r.sum,0);
-  document.getElementById('tbl-penalty-byshift').innerHTML = `
-    <thead><tr><th>#</th><th>กะ</th><th class="num">จำนวนครั้ง</th><th class="num">ค่าปรับรวม (฿)</th><th class="num">% ของค่าปรับรวม</th></tr></thead>
-    <tbody>${shiftRows.map((r,i)=>`<tr><td>${i+1}</td><td>${r.label}</td><td class="num"><a class="clickable-val" onclick="openPenaltyByShiftDrill(${r.S===null?'null':`'${r.S}'`})">${r.count}</a></td><td class="num">${fmtInt(r.sum)}</td><td class="num">${fmtPct(r.sum/(grandSum||1))}</td></tr>`).join('')}</tbody>
-    <tfoot><tr><td colspan="2">รวม</td><td class="num">${shiftRows.reduce((s,r)=>s+r.count,0)}</td><td class="num">${fmtInt(grandSum)}</td><td class="num">100.0%</td></tr></tfoot>`;
-  mkChart('chart-penalty-shift-pie', {
-    type:'doughnut',
-    data:{ labels: shiftRows.map(r=>r.label), datasets:[{ data: shiftRows.map(r=>r.sum), backgroundColor: shiftRows.map(r=>r.color) }] },
-    options:{ responsive:true, maintainAspectRatio:false, plugins:{title:{display:true,text:'สัดส่วนค่าปรับตามกะ',font:{size:11,weight:'600'}}} }
-  });
-
-  // daily trend
-  const byDate = {};
-  recs.forEach(r=>{ const d=dateOnly(r.arr_dt); if(!d) return; byDate[d]=byDate[d]||{A:0,B:0,C:0}; byDate[d][r.shift]+=effPenalty(r); });
-  const dates = Object.keys(byDate).sort();
-  mkChart('chart-penalty-daily', {
-    type:'bar',
-    data:{ labels: dates, datasets:[
-      { label:'กะ A', data: dates.map(d=>byDate[d].A), backgroundColor: SHIFT_COLOR.A },
-      { label:'กะ B', data: dates.map(d=>byDate[d].B), backgroundColor: SHIFT_COLOR.B },
-      { label:'กะ C', data: dates.map(d=>byDate[d].C), backgroundColor: SHIFT_COLOR.C },
-    ]},
-    options:{ responsive:true, maintainAspectRatio:false, plugins:{title:{display:true,text:'ค่าปรับรายวัน แยกกะ (บาท)',font:{size:11,weight:'600'}}}, scales:{x:{stacked:true},y:{stacked:true,beginAtZero:true}} }
-  });
-
-  const topPlate = plateRows[0];
-  document.getElementById('insight-penalty').innerHTML = topPlate ? `<b>สรุป:</b> ทะเบียน ${topPlate.plate} มีค่าปรับสะสมสูงสุด ${fmtInt(topPlate.sum)} บาท จาก ${topPlate.count} เที่ยว · ค่าปรับรวมทั้งช่วง ${fmtInt(grandSum)} บาท จาก ${recs.length} เที่ยว` : 'ไม่พบเที่ยวที่มีค่าปรับในช่วงที่เลือก';
-}
-
-function openEditPenalty(idx){
-  editingIdx = idx;
-  const r = DATA[idx];
-  const o = penaltyOverrides[idx];
-  document.getElementById('edit-kv').innerHTML = `
-    <div class="kv"><span class="k">ทะเบียน</span><span class="v">${r.plate}</span></div>
-    <div class="kv"><span class="k">เส้นทาง</span><span class="v">${safe(r.route)}</span></div>
-    <div class="kv"><span class="k">ล่าช้า</span><span class="v txt-delay">+${fmtInt(r.diff_min)} นาที</span></div>
-    <div class="kv"><span class="k">ค่าปรับตามเกณฑ์ (ก่อนจำกัด 1 ครั้ง/วัน)</span><span class="v">${fmtInt(r.penalty_raw)} บาท</span></div>
-    <div class="kv"><span class="k">ค่าปรับหลังจำกัด 1 ครั้ง/ทะเบียน/วัน</span><span class="v">${fmtInt(r.penalty)} บาท${r.penalty_capped?' (มีเที่ยวอื่นในวันเดียวกันที่สูงกว่า)':''}</span></div>`;
-  document.getElementById('edit-amount').value = o? o.amount : r.penalty;
-  document.getElementById('edit-reason').value = o? o.reason : '';
-  document.getElementById('edit-editor').value = o? o.editor : '';
-  document.getElementById('modal-edit').classList.add('show');
-}
-function saveEdit(){
-  const amount = parseFloat(document.getElementById('edit-amount').value) || 0;
-  const reason = document.getElementById('edit-reason').value.trim();
-  const editor = document.getElementById('edit-editor').value.trim();
-  if(!reason || !editor){ alert('กรุณาระบุเหตุผลและชื่อผู้แก้ไข'); return; }
-  penaltyOverrides[editingIdx] = { amount, reason, editor };
-  closeModal('modal-edit');
-  renderPenalty();
-  renderOverview(); // totals depend on penalty too
-}
-
 /* ---------------- Modals: vehicle / shift drill / matrix drill ---------------- */
 function openVehicle(plate){
   const recs = DATA.filter(r=>r.plate===plate).sort((a,b)=>(a.arr_dt||'').localeCompare(b.arr_dt||''));
   const on = recs.filter(r=>r.result==='ตรงเวลา').length, de = recs.filter(r=>r.result==='ล่าช้า').length;
-  const pen = recs.reduce((s,r)=>s+effPenalty(r),0);
   document.getElementById('mv-title').textContent = `ทะเบียน ${plate} — รายละเอียดทุกเที่ยว`;
   document.getElementById('mv-body').innerHTML = `
     <div class="kv-grid">
@@ -1691,7 +1615,6 @@ function openVehicle(plate){
       <div class="kv"><span class="k">ชนิดรถ</span><span class="v">${safe(recs[0]?.vclass)}</span></div>
       <div class="kv"><span class="k">เที่ยวรวม</span><span class="v">${recs.length}</span></div>
       <div class="kv"><span class="k">ตรงเวลา / ล่าช้า</span><span class="v"><span class="txt-ontime">${on}</span> / <span class="txt-delay">${de}</span></span></div>
-      <div class="kv"><span class="k">ค่าปรับสะสม</span><span class="v">${fmtBaht(pen)}</span></div>
       <div class="kv"><span class="k">นาทีล่าช้าเฉลี่ย</span><span class="v">${fmtInt(avg(recs.filter(r=>r.result==='ล่าช้า').map(r=>r.diff_min)))}</span></div>
     </div>
     <div class="table-scroll" style="max-height:340px;"><table class="dt">
@@ -1748,7 +1671,6 @@ function genericDrill(title, recs, opts){
   recs = recs.slice().sort((a,b)=>(b.diff_min??-999)-(a.diff_min??-999));
   const on = recs.filter(r=>r.result==='ตรงเวลา').length, de = recs.filter(r=>r.result==='ล่าช้า').length;
   const nodata = recs.filter(r=>r.result==='—').length;
-  const pen = recs.reduce((s,r)=>s+effPenalty(r),0);
   const ab = recs.filter(r=>r.type==='AB').length, cc = recs.filter(r=>r.type==='CC').length;
   document.getElementById('md-title').textContent = `${title} (${recs.length} เที่ยว)`;
   const exportId = 'tbl-generic-drill';
@@ -1757,14 +1679,13 @@ function genericDrill(title, recs, opts){
       <div class="kv"><span class="k">จำนวนเที่ยว</span><span class="v">${recs.length} <span style="font-weight:600;color:var(--slate-500);">(AB ${ab} · CC ${cc})</span></span></div>
       <div class="kv"><span class="k">ตรงเวลา / ล่าช้า</span><span class="v"><span class="txt-ontime">${on}</span> / <span class="txt-delay">${de}</span>${nodata?` / <span class="pill pill-nodata">ไม่มีผล ${nodata}</span>`:''}</span></div>
       <div class="kv"><span class="k">% ตรงเวลา</span><span class="v">${fmtPct(on/((on+de)||1))}</span></div>
-      <div class="kv"><span class="k">ค่าปรับรวม</span><span class="v">${fmtBaht(pen)}</span></div>
       <div class="kv"><span class="k">นาทีล่าช้าเฉลี่ย</span><span class="v">${fmtInt(avg(recs.filter(r=>r.result==='ล่าช้า').map(r=>r.diff_min)))}</span></div>
       <div class="kv"><span class="k">จำนวนทะเบียนที่เกี่ยวข้อง</span><span class="v">${new Set(recs.map(r=>r.plate)).size}</span></div>
     </div>
     <div class="table-scroll" style="max-height:420px;"><table class="dt" id="${exportId}">
-      <thead><tr><th>#</th><th>ทะเบียน</th><th>ประเภท</th><th>เส้นทาง</th><th>ต้นทาง</th><th>ปลายทาง</th><th>กะ</th><th class="num">ผลต่าง</th><th>ผล</th><th class="num">ค่าปรับ</th></tr></thead>
-      <tbody>${recs.map((r,i)=>`<tr><td>${i+1}</td><td>${plateLink(r.plate)}</td><td>${typePill(r.type)}</td><td>${safe(r.route)}</td><td>${safe(r.origin_region)}</td><td>${safe(r.dest_region)}</td><td>${safe(r.shift)}</td><td class="num ${r.diff_min>0?'txt-delay':(r.diff_min<0?'txt-ontime':'')}">${r.diff_min!==null?(r.diff_min>0?'+':'')+fmtInt(r.diff_min):'—'}</td><td>${resultPill(r.result)}</td><td class="num">${fmtInt(effPenalty(r))}</td></tr>`).join('') || `<tr><td colspan="10" class="empty-msg">ไม่มีข้อมูลตรงตามเงื่อนไขนี้</td></tr>`}</tbody>
-      <tfoot><tr><td colspan="7">รวม</td><td class="num">เฉลี่ย ${fmtInt(avg(recs.map(r=>r.diff_min)))}</td><td></td><td class="num">${fmtInt(pen)}</td></tr></tfoot>
+      <thead><tr><th>#</th><th>ทะเบียน</th><th>ประเภท</th><th>เส้นทาง</th><th>ต้นทาง</th><th>ปลายทาง</th><th>กะ</th><th class="num">ผลต่าง</th><th>ผล</th></tr></thead>
+      <tbody>${recs.map((r,i)=>`<tr><td>${i+1}</td><td>${plateLink(r.plate)}</td><td>${typePill(r.type)}</td><td>${safe(r.route)}</td><td>${safe(r.origin_region)}</td><td>${safe(r.dest_region)}</td><td>${safe(r.shift)}</td><td class="num ${r.diff_min>0?'txt-delay':(r.diff_min<0?'txt-ontime':'')}">${r.diff_min!==null?(r.diff_min>0?'+':'')+fmtInt(r.diff_min):'—'}</td><td>${resultPill(r.result)}</td></tr>`).join('') || `<tr><td colspan="9" class="empty-msg">ไม่มีข้อมูลตรงตามเงื่อนไขนี้</td></tr>`}</tbody>
+      <tfoot><tr><td colspan="7">รวม</td><td class="num">เฉลี่ย ${fmtInt(avg(recs.map(r=>r.diff_min)))}</td><td></td></tr></tfoot>
     </table></div>
     <div style="margin-top:10px;"><button class="btn" onclick="exportTableExcel('${exportId}','Detail_Export')">⇩ Export Excel</button></div>`;
   document.getElementById('modal-drill').classList.add('show');
@@ -1778,7 +1699,6 @@ function openKPIOverviewDrill(kind){
     withresult: ['มีผลเที่ยวนี้ (HT)', data.filter(r=>r.result!=='—')],
     ontime: ['ตรงเวลา (ทั้งหมด)', data.filter(r=>r.result==='ตรงเวลา')],
     delay: ['ล่าช้า (ทั้งหมด)', data.filter(r=>r.result==='ล่าช้า')],
-    penalty: ['เที่ยวที่มีค่าปรับ', data.filter(r=>effPenalty(r)>0)],
   };
   const [label, recs] = map[kind];
   genericDrill(label, recs);
@@ -1789,7 +1709,7 @@ function openSeverityDrill(key){
   const delay = getData().filter(r=>r.result==='ล่าช้า' && r.diff_min!==null);
   const tests = { '0-30': d=>d<=30, '31-60': d=>d>30&&d<=60, '61-90': d=>d>60&&d<=90, '90+': d=>d>90 };
   const recs = delay.filter(r=>tests[key](r.diff_min));
-  const labels = { '0-30':'ล่าช้า 0–30 นาที (ผ่อนผัน ไม่ปรับ)', '31-60':'ล่าช้า 31–60 นาที (ไม่ปรับ)', '61-90':'ล่าช้า 61–90 นาที (ปรับ 500฿)', '90+':'ล่าช้ามากกว่า 90 นาที (ปรับ 2,000฿)' };
+  const labels = { '0-30':'ล่าช้า 0–30 นาที', '31-60':'ล่าช้า 31–60 นาที', '61-90':'ล่าช้า 61–90 นาที', '90+':'ล่าช้ามากกว่า 90 นาที' };
   genericDrill(labels[key], recs);
 }
 
@@ -1836,15 +1756,13 @@ function openSP2Drill(S, type, cat){
   genericDrill(`กะ ${S} · ${type==='ALL'?'ทุกประเภท':type} · PA ${cat}`, recs);
 }
 
-// --- Shift Performance: penalty by-shift table ---
-function openPenaltyByShiftDrill(S){
-  const recs = getPenaltyRecords().filter(r=> S===null ? !r.shift : r.shift===S);
-  genericDrill(S===null? 'ค่าปรับ · ไม่ระบุกะ' : `ค่าปรับ · กะ ${S}`, recs);
-}
-
 // --- Shift Action: compare table cells ---
-function openSACompareDrill(S, t){
-  genericDrill(`กะ ${S} · ${t}`, getData().filter(r=>r.shift===S && r.type===t));
+function openSACompareDrill(S, t, res){
+  let recs = getData().filter(r=>r.shift===S && r.type===t);
+  let label = `กะ ${S} · ${t}`;
+  if(res==='ontime'){ recs = recs.filter(r=>r.result==='ตรงเวลา'); label += ' · ตรงเวลา'; }
+  else if(res==='delay'){ recs = recs.filter(r=>r.result==='ล่าช้า'); label += ' · ล่าช้า'; }
+  genericDrill(label, recs);
 }
 
 // --- Daily Performance: per-day cells filtered by type/result ---
@@ -1950,7 +1868,6 @@ function buildRecordFromRow(r, i){
   if(diffMin===null) diffMin = toNum2(r['ผลต่าง (นาที)']);
   let result = normEmpty(r['ผลเที่ยวนี้']) || '—';
   if(result==='—' && STD_GPS_KEY && diffMin!==null) result = diffMin>0 ? 'ล่าช้า' : 'ตรงเวลา';
-  const penalty = 0; // คำนวณใหม่ใน applyPenaltyRules() (เกณฑ์ 60/90 นาที + 1 ครั้ง/ทะเบียน/วัน)
   const paOut = paStatusOf(r['ตรงเวลาออกต้นทาง (PA)']);
   const paIn = paStatusOf(r['ตรงเวลาถึงปลายทาง (PA)']);
   return {
@@ -1976,7 +1893,6 @@ function buildRecordFromRow(r, i){
     status: normEmpty(r['สถานะ']),
     shift: shiftOfISO(arrISO),
     dep_shift: shiftOfISO(depISO),
-    penalty,
     worst_segment: normEmpty(r['ช่วงที่ล่าช้าที่สุด']),
     stop_min_total: toNum2(r['เวลาจอดรวมทั้งเที่ยว (นาที)']),
     abnormal_stops: toNum2(r['จำนวนจุดจอดนานผิดปกติ']),
@@ -2015,22 +1931,27 @@ function handleUploadedWorkbook(workbook, filename){
     if(late.length && late[Math.floor(late.length/2)]>0) STD_GPS_SIGN = 1; // ถ้าเที่ยวล่าช้าส่วนใหญ่เป็นค่าบวก แปลว่าไฟล์เก็บเป็น (จริง − มาตรฐาน)
   }
   const records = rows.map(buildRecordFromRow).filter(Boolean).map((r,i)=>({ ...r, idx:i }));
-  applyPenaltyRules(records);
   if(!records.length){
     showUploadStatus('err', `⚠ อ่านชีท "${sheetName}" ได้ แต่ไม่พบแถวข้อมูลที่มีทะเบียนรถ — ไฟล์ต้องมีคอลัมน์ที่จำเป็น: ${REQUIRED_COLS.join(', ')} (ขาด: ${missing.join(', ')||'-'})`);
     return;
   }
-  // commit new dataset
-  DATA = records;
-  penaltyOverrides = {};
+  // commit new dataset (ตัดวันเสาร์–อาทิตย์ออกทั้งหมด)
+  const prevWeekend = WEEKEND_EXCLUDED;
+  const kept = prepareData(records);
+  if(!kept.length){
+    WEEKEND_EXCLUDED = prevWeekend;
+    showUploadStatus('err', `⚠ เที่ยวทั้งหมด ${records.length.toLocaleString('en-US')} เที่ยวในไฟล์อยู่ในวันเสาร์–อาทิตย์ ซึ่งระบบตัดออกจากการคำนวณ จึงไม่มีข้อมูลวันจันทร์–ศุกร์ให้แสดง (ยังคงแสดงข้อมูลเดิมไว้)`);
+    return;
+  }
+  DATA = kept;
   initFilterBar();
   renderAll();
-  document.getElementById('data-subtitle').textContent = `ไฟล์: ${filename} · ชีท "${sheetName}" · ${records.length.toLocaleString('en-US')} เที่ยว`;
+  document.getElementById('data-subtitle').textContent = `ไฟล์: ${filename} · ชีท "${sheetName}" · ${DATA.length.toLocaleString('en-US')} เที่ยว (จันทร์–ศุกร์ · ตัดเสาร์–อาทิตย์ ${WEEKEND_EXCLUDED.toLocaleString('en-US')} เที่ยว)`;
   const ruleNote = STD_GPS_KEY ? ` · นาทีล่าช้าคำนวณจากคอลัมน์ "${STD_GPS_KEY}" (${STD_GPS_SIGN<0?'ค่าติดลบ = ล่าช้า':'ค่าบวก = ล่าช้า'})` : ' · ไม่พบคอลัมน์เวลามาตรฐาน–เวลาจริง (GPS) จึงใช้คอลัมน์ "ผลต่าง (นาที)" แทน';
   if(missing.length){
-    showUploadStatus('info', `✓ โหลดไฟล์ ${filename} สำเร็จ (${records.length.toLocaleString('en-US')} แถว) — หมายเหตุ: ไม่พบคอลัมน์ต่อไปนี้ในไฟล์ ระบบจึงแสดงค่า "ไม่มีข้อมูล" แทน: ${missing.join(', ')}${ruleNote}`);
+    showUploadStatus('info', `✓ โหลดไฟล์ ${filename} สำเร็จ (${DATA.length.toLocaleString('en-US')} เที่ยว) — หมายเหตุ: ไม่พบคอลัมน์ต่อไปนี้ในไฟล์ ระบบจึงแสดงค่า "ไม่มีข้อมูล" แทน: ${missing.join(', ')}${ruleNote} · ตัดวันเสาร์–อาทิตย์ออก ${WEEKEND_EXCLUDED.toLocaleString('en-US')} เที่ยว`);
   } else {
-    showUploadStatus('ok', `✓ โหลดไฟล์ ${filename} สำเร็จ — พบข้อมูล ${records.length.toLocaleString('en-US')} เที่ยว พร้อมวิเคราะห์${ruleNote}`);
+    showUploadStatus('ok', `✓ โหลดไฟล์ ${filename} สำเร็จ — พบข้อมูล ${DATA.length.toLocaleString('en-US')} เที่ยว (เฉพาะวันจันทร์–ศุกร์) พร้อมวิเคราะห์${ruleNote} · ตัดวันเสาร์–อาทิตย์ออก ${WEEKEND_EXCLUDED.toLocaleString('en-US')} เที่ยว`);
   }
 }
 
@@ -2073,7 +1994,6 @@ function shiftActionRow(S, data){
     total: arr.length,
     on: arr.filter(r=>r.result==='ตรงเวลา').length,
     de: arr.filter(r=>r.result==='ล่าช้า').length,
-    pen: arr.reduce((s,r)=>s+effPenalty(r),0),
   });
   return { S, all: mk(recs), ab: mk(ab), cc: mk(cc) };
 }
@@ -2096,8 +2016,7 @@ function renderShiftActionCards(data){
       <td class="num"><a class="clickable-val" onclick="openShiftActionDrill('${S}','${key}','ALL')">${m.total}</a></td>
       <td class="num"><a class="clickable-val txt-ontime" onclick="openShiftActionDrill('${S}','${key}','ontime')">${m.on}</a></td>
       <td class="num"><a class="clickable-val txt-delay" onclick="openShiftActionDrill('${S}','${key}','delay')">${m.de}</a></td>
-      <td class="num">${fmtPct(m.on/((m.on+m.de)||1))}</td>
-      <td class="num"><a class="clickable-val" onclick="openShiftActionDrill('${S}','${key}','penalty')">${fmtInt(m.pen)}</a></td>`;
+      <td class="num">${fmtPct(m.on/((m.on+m.de)||1))}</td>`;
     return `<div class="shift-action-card">
       <div class="shift-action-head shift${S}">
         <div><div class="sa-name">กะ ${S}</div><div class="sa-time">${SHIFT_LABEL[S]}</div></div>
@@ -2105,7 +2024,7 @@ function renderShiftActionCards(data){
       </div>
       <div class="panel-body">
         <table class="dt">
-          <thead><tr><th>#</th><th>ประเภท</th><th class="num">รถที่ต้องตรวจสอบ</th><th class="num">ตรงเวลา</th><th class="num">ล่าช้า</th><th class="num">% ตรงเวลา</th><th class="num">ค่าปรับ (฿)</th></tr></thead>
+          <thead><tr><th>#</th><th>ประเภท</th><th class="num">รถที่ต้องตรวจสอบ</th><th class="num">ตรงเวลา</th><th class="num">ล่าช้า</th><th class="num">% ตรงเวลา</th></tr></thead>
           <tbody>
             <tr><td>1</td>${row('AB', r.ab, 'AB')}</tr>
             <tr><td>2</td>${row('CC', r.cc, 'CC')}</tr>
@@ -2115,7 +2034,6 @@ function renderShiftActionCards(data){
             <td class="num txt-ontime"><a class="clickable-val txt-ontime" onclick="openShiftActionDrill('${S}','ALL','ontime')">${r.all.on}</a></td>
             <td class="num txt-delay"><a class="clickable-val txt-delay" onclick="openShiftActionDrill('${S}','ALL','delay')">${r.all.de}</a></td>
             <td class="num">${fmtPct(r.all.on/((r.all.on+r.all.de)||1))}</td>
-            <td class="num"><a class="clickable-val" onclick="openShiftActionDrill('${S}','ALL','penalty')">${fmtInt(r.all.pen)}</a></td>
           </tr></tfoot>
         </table>
         <div class="insight-box" style="margin-top:10px;">${shiftActionInsight(S, r, data)}</div>
@@ -2129,27 +2047,9 @@ function openShiftActionDrill(S, type, resultFilter){
   if(type!=='ALL') recs = recs.filter(r=>r.type===type);
   if(resultFilter==='ontime') recs = recs.filter(r=>r.result==='ตรงเวลา');
   else if(resultFilter==='delay') recs = recs.filter(r=>r.result==='ล่าช้า');
-  else if(resultFilter==='penalty') recs = recs.filter(r=>effPenalty(r)>0);
-  recs = recs.sort((a,b)=>(b.diff_min||-999)-(a.diff_min||-999));
-  const on = recs.filter(r=>r.result==='ตรงเวลา').length, de = recs.filter(r=>r.result==='ล่าช้า').length;
-  const pen = recs.reduce((s,r)=>s+effPenalty(r),0);
   const titleType = type==='ALL' ? 'ทุกประเภท' : type;
-  const titleRes = { ALL:'ทั้งหมด', ontime:'ตรงเวลา', delay:'ล่าช้า', penalty:'มีค่าปรับ' }[resultFilter];
-  document.getElementById('md-title').textContent = `กะ ${S} · ${titleType} · ${titleRes} — รายละเอียด (${recs.length} เที่ยว)`;
-  document.getElementById('md-body').innerHTML = `
-    <div class="kv-grid">
-      <div class="kv"><span class="k">จำนวนเที่ยว</span><span class="v">${recs.length}</span></div>
-      <div class="kv"><span class="k">ตรงเวลา / ล่าช้า</span><span class="v"><span class="txt-ontime">${on}</span> / <span class="txt-delay">${de}</span></span></div>
-      <div class="kv"><span class="k">ค่าปรับรวม</span><span class="v">${fmtBaht(pen)}</span></div>
-      <div class="kv"><span class="k">นาทีล่าช้าเฉลี่ย</span><span class="v">${fmtInt(avg(recs.filter(r=>r.result==='ล่าช้า').map(r=>r.diff_min)))}</span></div>
-    </div>
-    <div class="table-scroll" style="max-height:420px;"><table class="dt" id="tbl-sa-drill">
-      <thead><tr><th>#</th><th>ทะเบียน</th><th>ประเภท</th><th>เส้นทาง</th><th>ต้นทาง</th><th>ปลายทาง</th><th class="num">ผลต่าง</th><th>ผล</th><th class="num">ค่าปรับ</th></tr></thead>
-      <tbody>${recs.map((r,i)=>`<tr><td>${i+1}</td><td>${plateLink(r.plate)}</td><td>${typePill(r.type)}</td><td>${safe(r.route)}</td><td>${safe(r.origin_region)}</td><td>${safe(r.dest_region)}</td><td class="num ${r.diff_min>0?'txt-delay':(r.diff_min<0?'txt-ontime':'')}">${r.diff_min!==null?(r.diff_min>0?'+':'')+fmtInt(r.diff_min):'—'}</td><td>${resultPill(r.result)}</td><td class="num">${fmtInt(effPenalty(r))}</td></tr>`).join('')}</tbody>
-      <tfoot><tr><td colspan="6">รวม</td><td class="num">เฉลี่ย ${fmtInt(avg(recs.map(r=>r.diff_min)))}</td><td></td><td class="num">${fmtInt(pen)}</td></tr></tfoot>
-    </table></div>
-    <div style="margin-top:10px;"><button class="btn" onclick="exportTableExcel('tbl-sa-drill','ShiftAction_${S}_${type}_${resultFilter}')">⇩ Export Excel</button></div>`;
-  document.getElementById('modal-drill').classList.add('show');
+  const titleRes = { ALL:'ทั้งหมด', ontime:'ตรงเวลา', delay:'ล่าช้า' }[resultFilter] || 'ทั้งหมด';
+  genericDrill(`กะ ${S} · ${titleType} · ${titleRes}`, recs);
 }
 
 function renderShiftActionCompare(data){
@@ -2159,27 +2059,28 @@ function renderShiftActionCompare(data){
       const sub = data.filter(r=>r.shift===S && r.type===t);
       const on = sub.filter(r=>r.result==='ตรงเวลา').length;
       const de = sub.filter(r=>r.result==='ล่าช้า').length;
-      rows.push({ S, t, total: sub.length, on, de, onPct: on/((on+de)||1), pen: sub.reduce((s,r)=>s+effPenalty(r),0) });
+      rows.push({ S, t, total: sub.length, on, de, onPct: on/((on+de)||1), dePct: de/((on+de)||1) });
     });
   });
+  const T = k => rows.reduce((s,r)=>s+r[k],0);
   document.getElementById('tbl-sa-compare').innerHTML = `
-    <thead><tr><th>#</th><th>กะ</th><th>ประเภท</th><th class="num">เที่ยว</th><th class="num">ตรงเวลา</th><th class="num">ล่าช้า</th><th class="num">% ตรงเวลา</th><th class="num">ค่าปรับ (฿)</th></tr></thead>
-    <tbody>${rows.map((r,i)=>`<tr><td>${i+1}</td><td>กะ ${r.S}</td><td>${typePill(r.t)}</td><td class="num"><a class="clickable-val" onclick="openSACompareDrill('${r.S}','${r.t}')">${r.total}</a></td><td class="num txt-ontime">${r.on}</td><td class="num txt-delay">${r.de}</td><td class="num">${fmtPct(r.onPct)}</td><td class="num">${fmtInt(r.pen)}</td></tr>`).join('')}</tbody>
-    <tfoot><tr><td colspan="3">รวม</td><td class="num">${rows.reduce((s,r)=>s+r.total,0)}</td><td class="num txt-ontime">${rows.reduce((s,r)=>s+r.on,0)}</td><td class="num txt-delay">${rows.reduce((s,r)=>s+r.de,0)}</td><td class="num">-</td><td class="num">${rows.reduce((s,r)=>s+r.pen,0)}</td></tr></tfoot>`;
+    <thead><tr><th>#</th><th>กะ</th><th>ประเภท</th><th class="num">เที่ยว</th><th class="num">ตรงเวลา</th><th class="num">% ตรงเวลา</th><th class="num">ล่าช้า</th><th class="num">% ล่าช้า</th></tr></thead>
+    <tbody>${rows.map((r,i)=>`<tr><td>${i+1}</td><td>กะ ${r.S}</td><td>${typePill(r.t)}</td><td class="num"><a class="clickable-val" onclick="openSACompareDrill('${r.S}','${r.t}','ALL')">${r.total}</a></td><td class="num txt-ontime"><a class="clickable-val txt-ontime" onclick="openSACompareDrill('${r.S}','${r.t}','ontime')">${r.on}</a></td><td class="num txt-ontime">${fmtPct(r.onPct)}</td><td class="num txt-delay"><a class="clickable-val txt-delay" onclick="openSACompareDrill('${r.S}','${r.t}','delay')">${r.de}</a></td><td class="num txt-delay">${fmtPct(r.dePct)}</td></tr>`).join('')}</tbody>
+    <tfoot><tr><td colspan="3">รวม</td><td class="num">${T('total')}</td><td class="num txt-ontime">${T('on')}</td><td class="num txt-ontime">${fmtPct(T('on')/((T('on')+T('de'))||1))}</td><td class="num txt-delay">${T('de')}</td><td class="num txt-delay">${fmtPct(T('de')/((T('on')+T('de'))||1))}</td></tr></tfoot>`;
   mkChart('chart-sa-compare', {
     type:'bar',
     data:{ labels:['กะ A','กะ B','กะ C'], datasets:[
-      { label:'AB ล่าช้า', data: ['A','B','C'].map(S=>rows.find(r=>r.S===S&&r.t==='AB').de), backgroundColor: COL_AB },
-      { label:'CC ล่าช้า', data: ['A','B','C'].map(S=>rows.find(r=>r.S===S&&r.t==='CC').de), backgroundColor: COL_CC },
+      { label:'AB ล่าช้า', data: ['A','B','C'].map(S=>rows.find(r=>r.S===S&&r.t==='AB').de), backgroundColor: COL_AB, labelMode:'delay' },
+      { label:'CC ล่าช้า', data: ['A','B','C'].map(S=>rows.find(r=>r.S===S&&r.t==='CC').de), backgroundColor: COL_CC, labelMode:'delay' },
     ]},
-    options:{ responsive:true, maintainAspectRatio:false, plugins:{title:{display:true,text:'จำนวนเที่ยวล่าช้า แยกกะและประเภทรถ',font:{size:11,weight:'600'}}} }
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{title:{display:true,text:'จำนวนเที่ยวล่าช้า แยกกะและประเภทรถ'}} }
   });
   const worst = rows.reduce((a,b)=>b.de>a.de?b:a, rows[0]);
-  document.getElementById('insight-sa-compare').innerHTML = `<b>จุดที่ควรเฝ้าระวังที่สุด:</b> กะ ${worst.S} ประเภท ${worst.t} มีเที่ยวล่าช้าสูงสุด (${worst.de} เที่ยว, ค่าปรับ ${fmtInt(worst.pen)} บาท) ควรจัดสรรกำลังตรวจสอบเพิ่มเป็นลำดับแรก`;
+  document.getElementById('insight-sa-compare').innerHTML = `<b>จุดที่ควรเฝ้าระวังที่สุด:</b> กะ ${worst.S} ประเภท ${worst.t} มีเที่ยวล่าช้าสูงสุด (${worst.de} เที่ยว หรือ ${fmtPct(worst.dePct)} ของเที่ยวในกลุ่มนี้) ควรจัดสรรกำลังตรวจสอบเพิ่มเป็นลำดับแรก`;
 }
 
 function getActionCandidates(shiftFilter){
-  let recs = getData().filter(r=>r.result==='ล่าช้า' && r.diff_min!==null && r.diff_min>PENALTY_RULES.tier1Over);
+  let recs = getData().filter(r=>r.result==='ล่าช้า' && r.diff_min!==null && r.diff_min>ACTION_DELAY_OVER);
   if(shiftFilter && shiftFilter!=='ALL') recs = recs.filter(r=>r.shift===shiftFilter);
   return recs.sort((a,b)=>b.diff_min-a.diff_min);
 }
@@ -2189,20 +2090,20 @@ function renderActionLog(){
   const recs = getActionCandidates(shiftFilter);
   const STATUS_CLS = {'รอดำเนินการ':'wait','กำลังตรวจสอบ':'progress','แก้ไขแล้ว':'done','ไม่มีการแก้ไข (รับทราบ)':'ack'};
   document.getElementById('tbl-actionlog').innerHTML = `
-    <thead><tr><th>#</th><th>ทะเบียน</th><th>ประเภท</th><th>กะ</th><th>เส้นทาง</th><th class="num">ล่าช้า (นาที)</th><th class="num">ค่าปรับ (฿)</th><th>สถานะ</th><th>ผู้รับผิดชอบ</th><th>หมายเหตุ</th><th></th></tr></thead>
+    <thead><tr><th>#</th><th>ทะเบียน</th><th>ประเภท</th><th>กะ</th><th>เส้นทาง</th><th class="num">ล่าช้า (นาที)</th><th>สถานะ</th><th>ผู้รับผิดชอบ</th><th>หมายเหตุ</th><th></th></tr></thead>
     <tbody>${recs.map((r,i)=>{
       const a = actionLog[r.idx] || { status:'รอดำเนินการ', owner:'', note:'' };
       const cls = STATUS_CLS[a.status] || 'wait';
       return `<tr>
         <td>${i+1}</td><td>${plateLink(r.plate)}</td><td>${typePill(r.type)}</td><td>${safe(r.shift)}</td><td>${safe(r.route)}</td>
-        <td class="num txt-delay">+${fmtInt(r.diff_min)}</td><td class="num">${fmtInt(effPenalty(r))}</td>
+        <td class="num txt-delay">+${fmtInt(r.diff_min)}</td>
         <td><span class="pill pill-status ${cls}">${a.status}</span></td>
         <td>${safe(a.owner)||'-'}</td>
         <td style="font-size:11px;color:var(--slate-500);max-width:180px;white-space:normal;">${safe(a.note)||'-'}</td>
         <td><button class="btn small" onclick="openActionEdit(${r.idx})">✎ Edit</button></td>
       </tr>`;
     }).join('')}</tbody>
-    <tfoot><tr><td colspan="5">รวม ${recs.length} เที่ยว (ล่าช้า &gt; 60 นาที)</td><td class="num txt-delay">เฉลี่ย ${fmtInt(avg(recs.map(r=>r.diff_min)))}</td><td class="num">${fmtInt(recs.reduce((s,r)=>s+effPenalty(r),0))}</td><td colspan="4"></td></tr></tfoot>`;
+    <tfoot><tr><td colspan="5">รวม ${recs.length} เที่ยว (ล่าช้า &gt; 60 นาที)</td><td class="num txt-delay">เฉลี่ย ${fmtInt(avg(recs.map(r=>r.diff_min)))}</td><td colspan="4"></td></tr></tfoot>`;
 }
 
 function openActionEdit(idx){
@@ -2235,7 +2136,6 @@ function openKPIShiftActionDrill(kind){
     total: ['รถที่ต้องตรวจสอบ (รวมทุกกะ)', data],
     ontime: ['ตรงเวลา (รวมทุกกะ)', data.filter(r=>r.result==='ตรงเวลา')],
     delay: ['ล่าช้า (รวมทุกกะ)', data.filter(r=>r.result==='ล่าช้า')],
-    penalty: ['เที่ยวที่มีค่าปรับ (รวมทุกกะ)', data.filter(r=>effPenalty(r)>0)],
     actions: ['รายการ Action ที่ต้องติดตาม (ล่าช้า > 60 นาที)', getActionCandidates('ALL')],
   };
   const [label, recs] = map[kind];
@@ -2246,7 +2146,6 @@ function renderShiftAction(){
   const data = getData().filter(r=>r.shift);
   const ab = data.filter(r=>r.type==='AB').length, cc = data.filter(r=>r.type==='CC').length;
   const on = data.filter(r=>r.result==='ตรงเวลา').length, de = data.filter(r=>r.result==='ล่าช้า').length;
-  const pen = data.reduce((s,r)=>s+effPenalty(r),0);
   const actionCandidates = getActionCandidates('ALL');
   const shiftDelayCounts = ['A','B','C'].map(S=>({ S, de: data.filter(r=>r.shift===S && r.result==='ล่าช้า').length }));
   const worstShift = shiftDelayCounts.reduce((a,b)=>b.de>a.de?b:a, shiftDelayCounts[0]);
@@ -2254,7 +2153,6 @@ function renderShiftAction(){
     { label:'รถที่ต้องตรวจสอบ (รวม)', value: fmtInt(data.length), sub:`AB ${fmtInt(ab)} · CC ${fmtInt(cc)}`, cls:'accent-navy', click:"openKPIShiftActionDrill('total')" },
     { label:'ตรงเวลา', value: fmtInt(on), sub: fmtPct(on/((on+de)||1)), cls:'accent-ontime', subcls:'pos', click:"openKPIShiftActionDrill('ontime')" },
     { label:'ล่าช้า', value: fmtInt(de), sub: fmtPct(de/((on+de)||1)), cls:'accent-delay', subcls:'neg', click:"openKPIShiftActionDrill('delay')" },
-    { label:'ค่าปรับรวม', value: fmtBaht(pen), sub:`${fmtInt(data.filter(r=>effPenalty(r)>0).length)} เที่ยวมีค่าปรับ`, cls:'accent-delay', click:"openKPIShiftActionDrill('penalty')" },
     { label:'กะที่ต้องเฝ้าระวังสุด', value: `กะ ${worstShift.S}`, sub:`${fmtInt(worstShift.de)} เที่ยวล่าช้า`, cls:'accent-delay', click:`openShiftActionDrill('${worstShift.S}','ALL','delay')` },
     { label:'รายการ Action ที่ต้องติดตาม', value: fmtInt(actionCandidates.length), sub:'ล่าช้า > 60 นาที', cls:'accent-navy', click:"openKPIShiftActionDrill('actions')" },
   ];
@@ -2274,10 +2172,10 @@ function computeDailySeries(data){
   const byDate = {};
   data.forEach(r=>{
     const d = dateOnly(r.arr_dt);
-    if(!d || r.result==='—') return;
-    byDate[d] = byDate[d] || { on:0, de:0, penalty:0, abOn:0, abDe:0, ccOn:0, ccDe:0 };
+    if(!d || r.result==='—' || isWeekend(d)) return;
+    byDate[d] = byDate[d] || { on:0, de:0, abOn:0, abDe:0, ccOn:0, ccDe:0 };
     if(r.result==='ตรงเวลา'){ byDate[d].on++; if(r.type==='AB') byDate[d].abOn++; else if(r.type==='CC') byDate[d].ccOn++; }
-    else { byDate[d].de++; byDate[d].penalty += effPenalty(r); if(r.type==='AB') byDate[d].abDe++; else if(r.type==='CC') byDate[d].ccDe++; }
+    else { byDate[d].de++; if(r.type==='AB') byDate[d].abDe++; else if(r.type==='CC') byDate[d].ccDe++; }
   });
   const dates = Object.keys(byDate).sort();
   return { dates, byDate };
@@ -2294,35 +2192,172 @@ function computeDailySeriesABCC(data){
 }
 
 function renderDailyTable(dates, byDate){
-  let cumOn=0, cumDe=0;
+  let cumOn=0, cumDe=0, prevPct=null;
   const rows = dates.map(d=>{
     const b = byDate[d]; const total=b.on+b.de; cumOn+=b.on; cumDe+=b.de;
-    return { d, total, ab: b.abOn+b.abDe, cc: b.ccOn+b.ccDe, on:b.on, de:b.de, pct: total? b.on/total:0, pen:b.penalty, cumPct: (cumOn+cumDe)? cumOn/(cumOn+cumDe):0 };
+    const pct = total? b.on/total*100 : 0;
+    const row = { d, dow: TH_DAYS[dowOf(d)], total, ab: b.abOn+b.abDe, cc: b.ccOn+b.ccDe, on:b.on, de:b.de, pct, dePct: total? b.de/total*100:0, cumPct: (cumOn+cumDe)? cumOn/(cumOn+cumDe)*100:0, delta: prevPct===null? null : pct-prevPct };
+    prevPct = pct; return row;
   });
+  const S = k => rows.reduce((s,r)=>s+r[k],0);
   document.getElementById('tbl-dp-daily').innerHTML = `
-    <thead><tr><th>#</th><th>วันที่</th><th class="num">เที่ยวรวม</th><th class="num">AB</th><th class="num">CC</th><th class="num">ตรงเวลา</th><th class="num">ล่าช้า</th><th class="num">% ตรงเวลา</th><th class="num">ค่าปรับ (฿)</th><th class="num">% ตรงเวลาสะสม</th></tr></thead>
-    <tbody>${rows.map((r,i)=>`<tr><td>${i+1}</td><td><a class="plate-link" onclick="openDayDrill('${r.d}')">${r.d}</a></td><td class="num"><a class="clickable-val" onclick="openDayDrillFiltered('${r.d}','ALL','ALL')">${r.total}</a></td><td class="num"><a class="clickable-val" onclick="openDayDrillFiltered('${r.d}','AB','ALL')">${r.ab}</a></td><td class="num"><a class="clickable-val" onclick="openDayDrillFiltered('${r.d}','CC','ALL')">${r.cc}</a></td><td class="num txt-ontime"><a class="clickable-val txt-ontime" onclick="openDayDrillFiltered('${r.d}','ALL','ontime')">${r.on}</a></td><td class="num txt-delay"><a class="clickable-val txt-delay" onclick="openDayDrillFiltered('${r.d}','ALL','delay')">${r.de}</a></td><td class="num">${fmtPct(r.pct)}</td><td class="num">${fmtInt(r.pen)}</td><td class="num">${fmtPct(r.cumPct)}</td></tr>`).join('')}</tbody>
-    <tfoot><tr><td colspan="2">รวม (${rows.length} วัน)</td><td class="num">${rows.reduce((s,r)=>s+r.total,0)}</td><td class="num">${rows.reduce((s,r)=>s+r.ab,0)}</td><td class="num">${rows.reduce((s,r)=>s+r.cc,0)}</td><td class="num txt-ontime">${rows.reduce((s,r)=>s+r.on,0)}</td><td class="num txt-delay">${rows.reduce((s,r)=>s+r.de,0)}</td><td class="num">${fmtPct(rows.reduce((s,r)=>s+r.on,0)/(rows.reduce((s,r)=>s+r.total,0)||1))}</td><td class="num">${fmtInt(rows.reduce((s,r)=>s+r.pen,0))}</td><td class="num">—</td></tr></tfoot>`;
+    <thead><tr><th>#</th><th>วันที่</th><th>วัน</th><th class="num">เที่ยวรวม</th><th class="num">AB</th><th class="num">CC</th><th class="num">ตรงเวลา</th><th class="num">ล่าช้า</th><th class="num">% ตรงเวลา</th><th class="num">เทียบวันก่อน</th><th class="num">% ล่าช้า</th><th class="num">% ตรงเวลาสะสม</th></tr></thead>
+    <tbody>${rows.map((r,i)=>`<tr><td>${i+1}</td><td><a class="plate-link" onclick="openDayDrill('${r.d}')">${r.d}</a></td><td>${r.dow}</td><td class="num"><a class="clickable-val" onclick="openDayDrillFiltered('${r.d}','ALL','ALL')">${r.total}</a></td><td class="num"><a class="clickable-val" onclick="openDayDrillFiltered('${r.d}','AB','ALL')">${r.ab}</a></td><td class="num"><a class="clickable-val" onclick="openDayDrillFiltered('${r.d}','CC','ALL')">${r.cc}</a></td><td class="num txt-ontime"><a class="clickable-val txt-ontime" onclick="openDayDrillFiltered('${r.d}','ALL','ontime')">${r.on}</a></td><td class="num txt-delay"><a class="clickable-val txt-delay" onclick="openDayDrillFiltered('${r.d}','ALL','delay')">${r.de}</a></td><td class="num txt-ontime">${r.pct.toFixed(1)}%</td><td class="num">${deltaHTML(r.pct, r.delta===null?null:r.pct-r.delta, {better:'up', unit:' จุด'})}</td><td class="num txt-delay">${r.dePct.toFixed(1)}%</td><td class="num">${r.cumPct.toFixed(1)}%</td></tr>`).join('')}</tbody>
+    <tfoot><tr><td colspan="3">รวม (${rows.length} วันทำงาน)</td><td class="num">${S('total')}</td><td class="num">${S('ab')}</td><td class="num">${S('cc')}</td><td class="num txt-ontime">${S('on')}</td><td class="num txt-delay">${S('de')}</td><td class="num txt-ontime">${fmtPct(S('on')/(S('total')||1))}</td><td class="num">—</td><td class="num txt-delay">${fmtPct(S('de')/(S('total')||1))}</td><td class="num">—</td></tr></tfoot>`;
 }
 
 function openDayDrill(dateStr){
   const recs = getData().filter(r=>dateOnly(r.arr_dt)===dateStr);
-  const on = recs.filter(r=>r.result==='ตรงเวลา').length, de = recs.filter(r=>r.result==='ล่าช้า').length;
-  document.getElementById('md-title').textContent = `รายละเอียดวันที่ ${dateStr} (${recs.length} เที่ยว)`;
-  document.getElementById('md-body').innerHTML = `
-    <div class="kv-grid">
-      <div class="kv"><span class="k">เที่ยวรวม</span><span class="v">${recs.length}</span></div>
-      <div class="kv"><span class="k">ตรงเวลา / ล่าช้า</span><span class="v"><span class="txt-ontime">${on}</span> / <span class="txt-delay">${de}</span></span></div>
-      <div class="kv"><span class="k">ค่าปรับรวม</span><span class="v">${fmtBaht(recs.reduce((s,r)=>s+effPenalty(r),0))}</span></div>
-      <div class="kv"><span class="k">% ตรงเวลา</span><span class="v">${fmtPct(on/((on+de)||1))}</span></div>
-    </div>
-    <div class="table-scroll" style="max-height:420px;"><table class="dt" id="tbl-day-drill">
-      <thead><tr><th>#</th><th>ทะเบียน</th><th>ประเภท</th><th>กะ</th><th>เส้นทาง</th><th class="num">ผลต่าง</th><th>ผล</th><th class="num">ค่าปรับ</th></tr></thead>
-      <tbody>${recs.map((r,i)=>`<tr><td>${i+1}</td><td>${plateLink(r.plate)}</td><td>${typePill(r.type)}</td><td>${safe(r.shift)}</td><td>${safe(r.route)}</td><td class="num ${r.diff_min>0?'txt-delay':(r.diff_min<0?'txt-ontime':'')}">${r.diff_min!==null?(r.diff_min>0?'+':'')+fmtInt(r.diff_min):'—'}</td><td>${resultPill(r.result)}</td><td class="num">${fmtInt(effPenalty(r))}</td></tr>`).join('')}</tbody>
-      <tfoot><tr><td colspan="5">รวม</td><td class="num">เฉลี่ย ${fmtInt(avg(recs.map(r=>r.diff_min)))}</td><td></td><td class="num">${fmtInt(recs.reduce((s,r)=>s+effPenalty(r),0))}</td></tr></tfoot>
-    </table></div>
-    <div style="margin-top:10px;"><button class="btn" onclick="exportTableExcel('tbl-day-drill','Day_${dateStr}_Detail')">⇩ Export Excel</button></div>`;
-  document.getElementById('modal-drill').classList.add('show');
+  genericDrill(`วัน${TH_DAYS[dowOf(dateStr)]}ที่ ${dateStr}`, recs);
+}
+
+/* ---------------- Delta / trend helpers (ลูกศร ▲▼ เขียว = ดีขึ้น, แดง = แย่ลง) ---------------- */
+function deltaHTML(cur, prev, o){
+  o = o || {};
+  if(prev===null || prev===undefined || cur===null || cur===undefined) return '<span class="delta-flat">—</span>';
+  const d = o.digits===undefined ? 1 : o.digits;
+  const diff = cur - prev;
+  if(Math.abs(diff) < Math.pow(10,-d)/2) return `<span class="delta-flat">▬ ${(0).toFixed(d)}${o.unit||''}</span>`;
+  const up = diff>0;
+  let cls = 'delta-flat';
+  if(o.better){ const good = o.better==='up' ? up : !up; cls = good ? 'delta-good' : 'delta-bad'; }
+  return `<span class="${cls}">${up?'▲':'▼'} ${up?'+':''}${diff.toFixed(d)}${o.unit||''}</span>`;
+}
+function verdictHTML(pctDiff, delayDiff, verbose){
+  // สัญญาณ 1: % ตรงเวลา (เพิ่ม = ดี)  สัญญาณ 2: นาทีล่าช้าเฉลี่ย (ลด = ดี)
+  if(pctDiff===null) return '<span class="delta-flat">สัปดาห์แรก</span>';
+  const a = pctDiff>0.05 ? 1 : (pctDiff<-0.05 ? -1 : 0);
+  const b = delayDiff<-0.5 ? 1 : (delayDiff>0.5 ? -1 : 0);
+  if(a>=0 && b>=0 && (a+b)>0) return '<span class="delta-good">▲ ดีขึ้น</span>';
+  if(a<=0 && b<=0 && (a+b)<0) return '<span class="delta-bad">▼ แย่ลง</span>';
+  if(a*b<0) return `<span class="delta-mix" title="${a>0?'% ตรงเวลาดีขึ้น แต่ล่าช้าเฉลี่ยนานขึ้น':'ล่าช้าเฉลี่ยสั้นลง แต่ % ตรงเวลาลดลง'}">◆ ผสม${verbose?' — '+(a>0?'% ตรงเวลาดีขึ้น แต่ล่าช้าเฉลี่ยนานขึ้น':'ล่าช้าเฉลี่ยสั้นลง แต่ % ตรงเวลาลดลง'):''}</span>`;
+  return '<span class="delta-flat">▬ ทรงตัว</span>';
+}
+
+/* ---------------- Weekly (จันทร์–ศุกร์ ตามปฏิทินไทย) ---------------- */
+function addDaysStr(dateStr, n){ const [y,m,d]=dateStr.split('-').map(Number); return new Date(Date.UTC(y,m-1,d+n)).toISOString().slice(0,10); }
+function mondayOf(dateStr){ return addDaysStr(dateStr, -((dowOf(dateStr)+6)%7)); }
+function thaiDateShort(dateStr, withYear){ const [y,m,d]=dateStr.split('-').map(Number); return `${d} ${TH_MONTHS[m-1]}${withYear?' '+(y+543):''}`; }
+function weekRangeLabel(mon){ return `จ. ${thaiDateShort(mon)} – ศ. ${thaiDateShort(addDaysStr(mon,4),true)}`; }
+function computeWeeklySeries(base){
+  const weeks = {};
+  base.forEach(r=>{
+    const d = dateOnly(r.arr_dt);
+    if(!d || r.result==='—' || isWeekend(d)) return;
+    const mon = mondayOf(d);
+    const w = weeks[mon] = weeks[mon] || { mon, days:new Set(), on:0, de:0, abOn:0, abDe:0, ccOn:0, ccDe:0, delSum:0, delN:0, sh:{A:{on:0,de:0},B:{on:0,de:0},C:{on:0,de:0}} };
+    w.days.add(d);
+    const isOn = r.result==='ตรงเวลา';
+    if(isOn) w.on++; else { w.de++; if(r.diff_min!==null){ w.delSum+=r.diff_min; w.delN++; } }
+    if(r.type==='AB'){ if(isOn) w.abOn++; else w.abDe++; } else if(r.type==='CC'){ if(isOn) w.ccOn++; else w.ccDe++; }
+    if(r.shift && w.sh[r.shift]){ if(isOn) w.sh[r.shift].on++; else w.sh[r.shift].de++; }
+  });
+  return Object.keys(weeks).sort().map((k,i)=>{
+    const w = weeks[k], total = w.on+w.de, abT = w.abOn+w.abDe, ccT = w.ccOn+w.ccDe;
+    return { mon:k, label:weekRangeLabel(k), no:i+1, days:w.days.size, total, ab:abT, cc:ccT, on:w.on, de:w.de,
+      pct: total? w.on/total*100 : 0, dePct: total? w.de/total*100 : 0,
+      avgDelay: w.delN? w.delSum/w.delN : 0, delSum:w.delSum, delN:w.delN, perDay: total/(w.days.size||1),
+      abPct: abT? +(w.abOn/abT*100).toFixed(1) : null, ccPct: ccT? +(w.ccOn/ccT*100).toFixed(1) : null,
+      shPct: ['A','B','C'].map(S=>{ const t=w.sh[S].on+w.sh[S].de; return t? +(w.sh[S].on/t*100).toFixed(1) : null; }) };
+  });
+}
+function openWeekDrill(mon, type, res){
+  const typeFilter = document.getElementById('ddl-dp-type').value;
+  let recs = getData().filter(r=> r.result!=='—' && dateOnly(r.arr_dt) && !isWeekend(dateOnly(r.arr_dt)) && mondayOf(dateOnly(r.arr_dt))===mon && (typeFilter==='ALL' || r.type===typeFilter));
+  let label = `สัปดาห์ ${weekRangeLabel(mon)}`;
+  if(type && type!=='ALL'){ recs = recs.filter(r=>r.type===type); label += ` · ${type}`; }
+  if(res==='ontime'){ recs = recs.filter(r=>r.result==='ตรงเวลา'); label += ' · ตรงเวลา'; }
+  else if(res==='delay'){ recs = recs.filter(r=>r.result==='ล่าช้า'); label += ' · ล่าช้า'; }
+  genericDrill(label, recs);
+}
+function renderWeekly(base){
+  const rows = computeWeeklySeries(base);
+  const last = rows[rows.length-1], prev = rows.length>1 ? rows[rows.length-2] : null;
+  const noteEl = document.getElementById('wk-range-note');
+  noteEl.textContent = rows.length ? `${rows.length} สัปดาห์ · ${rows.reduce((s,r)=>s+r.days,0)} วันทำงาน (จันทร์–ศุกร์ ไม่นับเสาร์–อาทิตย์)` : 'ไม่มีข้อมูลในช่วงที่เลือก';
+  if(!rows.length){
+    ['kpi-weekly'].forEach(id=>document.getElementById(id).innerHTML='');
+    document.getElementById('tbl-dp-weekly').innerHTML = '<tbody><tr><td class="empty-msg">ไม่มีข้อมูลในช่วงที่เลือก</td></tr></tbody>';
+    document.getElementById('insight-dp-weekly').innerHTML = 'ไม่มีข้อมูลในช่วงที่เลือก';
+    ['chart-wk-counts','chart-wk-pct','chart-wk-shift','chart-wk-delay'].forEach(id=>{ if(chartRegistry[id]){ chartRegistry[id].destroy(); delete chartRegistry[id]; } });
+    return;
+  }
+  const totDays = rows.reduce((s,r)=>s+r.days,0);
+  const kpis = [
+    { label:'จำนวนสัปดาห์ (จ.–ศ.)', value: fmtInt(rows.length), sub:`${fmtInt(totDays)} วันทำงาน`, cls:'accent-navy', click:null },
+    { label:'% ตรงเวลา สัปดาห์ล่าสุด', value: last.pct.toFixed(1)+'%', sub: (prev? deltaHTML(last.pct, prev.pct, {better:'up', unit:' จุด'})+' <span class="kpi-vs">เทียบสัปดาห์ก่อน '+prev.pct.toFixed(1)+'%</span>' : 'สัปดาห์แรก'), cls:'accent-ontime', click:`openWeekDrill('${last.mon}','ALL','ontime')` },
+    { label:'% ล่าช้า สัปดาห์ล่าสุด', value: last.dePct.toFixed(1)+'%', sub: (prev? deltaHTML(last.dePct, prev.dePct, {better:'down', unit:' จุด'})+' <span class="kpi-vs">เทียบสัปดาห์ก่อน '+prev.dePct.toFixed(1)+'%</span>' : fmtInt(last.de)+' เที่ยว'), cls:'accent-delay', click:`openWeekDrill('${last.mon}','ALL','delay')` },
+    { label:'นาทีล่าช้าเฉลี่ย สัปดาห์ล่าสุด', value: fmtInt(last.avgDelay)+' นาที', sub: (prev? deltaHTML(last.avgDelay, prev.avgDelay, {better:'down', unit:' นาที', digits:0})+' <span class="kpi-vs">เทียบสัปดาห์ก่อน '+fmtInt(prev.avgDelay)+'</span>' : 'สัปดาห์แรก'), cls:'accent-delay', click:`openWeekDrill('${last.mon}','ALL','delay')` },
+    { label:'เที่ยว/วันทำงาน สัปดาห์ล่าสุด', value: fmtInt(last.perDay), sub: (prev? deltaHTML(last.perDay, prev.perDay, {better:null, unit:' เที่ยว', digits:0})+' <span class="kpi-vs">เทียบสัปดาห์ก่อน '+fmtInt(prev.perDay)+'</span>' : `${last.days} วันทำงาน`), cls:'accent-navy', click:`openWeekDrill('${last.mon}','ALL','ALL')` },
+  ];
+  document.getElementById('kpi-weekly').innerHTML = kpis.map(k=>`
+    <div class="kpi-card ${k.cls}" ${k.click?`style="cursor:pointer;" onclick="${k.click}"`:''}><div class="kpi-label">${k.label}</div><div class="kpi-value">${k.value}</div><div class="kpi-sub">${k.sub}</div></div>`).join('');
+
+  const T = k => rows.reduce((s,r)=>s+r[k],0);
+  const allDelN = T('delN'), allDelAvg = allDelN? T('delSum')/allDelN : 0;
+  document.getElementById('tbl-dp-weekly').innerHTML = `
+    <thead><tr><th>#</th><th>สัปดาห์ (จันทร์–ศุกร์)</th><th class="num">วันทำงาน</th><th class="num">เที่ยวรวม</th><th class="num">AB</th><th class="num">CC</th><th class="num">ตรงเวลา</th><th class="num">ล่าช้า</th><th class="num">% ตรงเวลา</th><th class="num">เทียบสัปดาห์ก่อน</th><th class="num">% ล่าช้า</th><th class="num">เทียบสัปดาห์ก่อน</th><th class="num">ล่าช้าเฉลี่ย (นาที)</th><th class="num">เทียบสัปดาห์ก่อน</th><th class="num">เที่ยว/วัน</th><th class="num">เทียบสัปดาห์ก่อน</th><th>แนวโน้ม</th></tr></thead>
+    <tbody>${rows.map((r,i)=>{ const p = i>0? rows[i-1] : null; return `<tr>
+      <td>${r.no}</td><td>${r.label}</td><td class="num">${r.days}${r.days<5?' <span class="delta-flat" title="สัปดาห์ที่ข้อมูลไม่ครบ 5 วัน">*</span>':''}</td>
+      <td class="num"><a class="clickable-val" onclick="openWeekDrill('${r.mon}','ALL','ALL')">${r.total}</a></td>
+      <td class="num"><a class="clickable-val" onclick="openWeekDrill('${r.mon}','AB','ALL')">${r.ab}</a></td>
+      <td class="num"><a class="clickable-val" onclick="openWeekDrill('${r.mon}','CC','ALL')">${r.cc}</a></td>
+      <td class="num txt-ontime"><a class="clickable-val txt-ontime" onclick="openWeekDrill('${r.mon}','ALL','ontime')">${r.on}</a></td>
+      <td class="num txt-delay"><a class="clickable-val txt-delay" onclick="openWeekDrill('${r.mon}','ALL','delay')">${r.de}</a></td>
+      <td class="num txt-ontime">${r.pct.toFixed(1)}%</td><td class="num">${deltaHTML(r.pct, p&&p.pct, {better:'up', unit:' จุด'})}</td>
+      <td class="num txt-delay">${r.dePct.toFixed(1)}%</td><td class="num">${deltaHTML(r.dePct, p&&p.dePct, {better:'down', unit:' จุด'})}</td>
+      <td class="num">${fmtInt(r.avgDelay)}</td><td class="num">${deltaHTML(r.avgDelay, p&&p.avgDelay, {better:'down', unit:' นาที', digits:0})}</td>
+      <td class="num">${fmtInt(r.perDay)}</td><td class="num">${deltaHTML(r.perDay, p&&p.perDay, {better:null, unit:'', digits:0})}</td>
+      <td>${verdictHTML(p? r.pct-p.pct : null, p? r.avgDelay-p.avgDelay : 0)}</td></tr>`; }).join('')}</tbody>
+    <tfoot><tr><td colspan="2">รวม (${rows.length} สัปดาห์)</td><td class="num">${T('days')}</td><td class="num">${T('total')}</td><td class="num">${T('ab')}</td><td class="num">${T('cc')}</td><td class="num txt-ontime">${T('on')}</td><td class="num txt-delay">${T('de')}</td><td class="num txt-ontime">${fmtPct(T('on')/(T('total')||1))}</td><td class="num">—</td><td class="num txt-delay">${fmtPct(T('de')/(T('total')||1))}</td><td class="num">—</td><td class="num">${fmtInt(allDelAvg)}</td><td class="num">—</td><td class="num">${fmtInt(T('total')/(T('days')||1))}</td><td class="num">—</td><td>—</td></tr></tfoot>`;
+
+  const labels = rows.map(r=>'สัปดาห์ '+r.no);
+  const wkTitle = rows.map(r=>r.label);
+  const tipTitle = items => wkTitle[items[0].dataIndex];
+  mkChart('chart-wk-counts', {
+    type:'bar',
+    data:{ labels, datasets:[
+      { label:'ตรงเวลา', data: rows.map(r=>r.on), backgroundColor: COL_ONTIME, labelMode:'ontime' },
+      { label:'ล่าช้า', data: rows.map(r=>r.de), backgroundColor: COL_DELAY, labelMode:'delay' },
+    ]},
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{title:{display:true,text:'จำนวนเที่ยวรายสัปดาห์ (จ.–ศ.)'}, tooltip:{callbacks:{title:tipTitle}}}, scales:{y:{beginAtZero:true}} }
+  });
+  mkChart('chart-wk-pct', {
+    type:'line',
+    data:{ labels, datasets:[
+      { label:'AB % ตรงเวลา', data: rows.map(r=>r.abPct), borderColor: COL_AB, backgroundColor: COL_AB, labelMode:'trend', better:'up', labelFormat:'pct', labelPos:'bottom', spanGaps:true },
+      { label:'CC % ตรงเวลา', data: rows.map(r=>r.ccPct), borderColor: COL_CC, backgroundColor: COL_CC, labelMode:'trend', better:'up', labelFormat:'pct', labelPos:'top', spanGaps:true },
+      { label:'รวม % ตรงเวลา', data: rows.map(r=>+r.pct.toFixed(1)), borderColor:'#7A889C', backgroundColor:'#7A889C', borderDash:[6,5], showLabels:false, borderWidth:2, pointRadius:3 },
+    ]},
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{title:{display:true,text:'% ตรงเวลารายสัปดาห์ แยก AB / CC (เขียว = ดีขึ้น, แดง = แย่ลง)'}, tooltip:{callbacks:{title:tipTitle}}}, scales:{y:{min:0,max:100}} }
+  });
+  const shCols = [SHIFT_COLOR.A, SHIFT_COLOR.B, SHIFT_COLOR.C];
+  mkChart('chart-wk-shift', {
+    type:'bar',
+    data:{ labels, datasets:['A','B','C'].map((S,k)=>({ label:'กะ '+S, data: rows.map(r=>r.shPct[k]), backgroundColor: shCols[k], labelMode:'trend', better:'up', labelFormat:'pct', labelSize:12 })) },
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{title:{display:true,text:'% ตรงเวลารายสัปดาห์ แยกกะ'}, tooltip:{callbacks:{title:tipTitle}}}, scales:{y:{min:0,max:100}} }
+  });
+  mkChart('chart-wk-delay', {
+    type:'bar',
+    data:{ labels, datasets:[ { label:'นาทีล่าช้าเฉลี่ย', data: rows.map(r=>Math.round(r.avgDelay)), backgroundColor:'#E58A7F', labelMode:'trend', better:'down' } ] },
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}, title:{display:true,text:'นาทีล่าช้าเฉลี่ยรายสัปดาห์ (ลดลง = ดีขึ้น)'}, tooltip:{callbacks:{title:tipTitle}}}, scales:{y:{beginAtZero:true}} }
+  });
+
+  // ---- วิเคราะห์ ----
+  let html = '';
+  if(!prev){
+    html = `<b>สรุปรายสัปดาห์:</b> ขณะนี้มีข้อมูล 1 สัปดาห์ (${last.label}) · ตรงเวลา ${last.pct.toFixed(1)}% ล่าช้า ${last.dePct.toFixed(1)}% · ยังเปรียบเทียบแนวโน้มรายสัปดาห์ไม่ได้ เมื่อมีข้อมูลสัปดาห์ถัดไประบบจะแสดงลูกศรเปรียบเทียบให้อัตโนมัติ`;
+  } else {
+    const best = rows.reduce((a,b)=>b.pct>a.pct?b:a), worst = rows.reduce((a,b)=>b.pct<a.pct?b:a);
+    const first = rows[0];
+    const dPct = last.pct-prev.pct, dDel = last.avgDelay-prev.avgDelay;
+    html = `<b>สัปดาห์ล่าสุด</b> (${last.label}) % ตรงเวลา <b>${last.pct.toFixed(1)}%</b> ${deltaHTML(last.pct, prev.pct, {better:'up', unit:' จุด'})} เทียบสัปดาห์ก่อน (${prev.pct.toFixed(1)}%) · ล่าช้าเฉลี่ย <b>${fmtInt(last.avgDelay)}</b> นาที ${deltaHTML(last.avgDelay, prev.avgDelay, {better:'down', unit:' นาที', digits:0})} → ภาพรวม ${verdictHTML(dPct, dDel, true)}<br>
+      <b>ภาพรวมทุกสัปดาห์:</b> ดีที่สุดคือ ${best.label} (${best.pct.toFixed(1)}%) · ต่ำที่สุดคือ ${worst.label} (${worst.pct.toFixed(1)}%) · จากสัปดาห์แรกถึงล่าสุด % ตรงเวลาเปลี่ยน ${deltaHTML(last.pct, first.pct, {better:'up', unit:' จุด'})}
+      ${last.abPct!==null && last.ccPct!==null ? `· <b>AB vs CC (สัปดาห์ล่าสุด):</b> AB ${last.abPct.toFixed(1)}% เทียบ CC ${last.ccPct.toFixed(1)}% — ${last.abPct>=last.ccPct?'AB':'CC'} รักษาเวลาได้ดีกว่า ${Math.abs(last.abPct-last.ccPct).toFixed(1)} จุด` : ''}`;
+  }
+  const partial = rows.filter(r=>r.days<5);
+  if(partial.length) html += `<br><span class="delta-flat">* สัปดาห์ที่มีข้อมูลไม่ครบ 5 วันทำงาน (${partial.map(r=>'สัปดาห์ '+r.no+' = '+r.days+' วัน').join(', ')}) — ควรเปรียบเทียบด้วย % และเที่ยว/วัน ไม่ใช่จำนวนเที่ยวรวม</span>`;
+  document.getElementById('insight-dp-weekly').innerHTML = html;
 }
 
 // --- Daily Performance: top KPI cards ---
@@ -2343,7 +2378,7 @@ function renderDailyPerf(){
   const base = getData().filter(r=> typeFilter==='ALL' || r.type===typeFilter);
   const { dates, byDate } = computeDailySeries(base);
 
-  document.getElementById('dp-range-note').textContent = dates.length ? `ช่วงข้อมูล ${dates[0]} ถึง ${dates[dates.length-1]} (${dates.length} วัน)` : 'ไม่มีข้อมูลในช่วงที่เลือก';
+  document.getElementById('dp-range-note').textContent = dates.length ? `ช่วงข้อมูล ${dates[0]} ถึง ${dates[dates.length-1]} (${dates.length} วันทำงาน จันทร์–ศุกร์)` : 'ไม่มีข้อมูลในช่วงที่เลือก';
 
   const totalOn = dates.reduce((s,d)=>s+byDate[d].on,0);
   const totalDe = dates.reduce((s,d)=>s+byDate[d].de,0);
@@ -2356,56 +2391,59 @@ function renderDailyPerf(){
   const trendUp = p2 >= p1;
 
   const kpis = [
-    { label:'จำนวนวันข้อมูล', value: fmtInt(dates.length), sub:'วัน', cls:'accent-navy', click:null },
+    { label:'จำนวนวันทำงาน (จ.–ศ.)', value: fmtInt(dates.length), sub:'วัน (ไม่นับเสาร์–อาทิตย์)', cls:'accent-navy', click:null },
     { label:'เที่ยวเฉลี่ย/วัน', value: fmtInt(avgDaily), sub:'เที่ยว', cls:'accent-navy', click:"openKPIDailyDrill('total')" },
-    { label:'% ตรงเวลาเฉลี่ยรวม', value: fmtPct(avgPctOn), sub:'ตลอดช่วงข้อมูล', cls:'accent-ontime', subcls:'pos', click:"openKPIDailyDrill('ontime')" },
-    { label:'ค่าปรับรวมทั้งช่วง', value: fmtBaht(dates.reduce((s,d)=>s+byDate[d].penalty,0)), sub:`${fmtInt(totalDe)} เที่ยวล่าช้า`, cls:'accent-delay', click:"openKPIDailyDrill('delay')" },
+    { label:'% ตรงเวลาเฉลี่ยรวม', value: fmtPct(avgPctOn), sub:`${fmtInt(totalOn)} เที่ยวตรงเวลา`, cls:'accent-ontime', subcls:'pos', click:"openKPIDailyDrill('ontime')" },
+    { label:'เที่ยวล่าช้ารวม', value: fmtInt(totalDe), sub:`${fmtPct(totalDe/((totalOn+totalDe)||1))} ของเที่ยวทั้งหมด`, cls:'accent-delay', subcls:'neg', click:"openKPIDailyDrill('delay')" },
     { label:'แนวโน้ม (ครึ่งแรก → ครึ่งหลัง)', value: trendUp? '▲ ดีขึ้น':'▼ แย่ลง', sub:`${fmtPct(p1)} → ${fmtPct(p2)}`, cls: trendUp?'accent-ontime':'accent-delay', subcls: trendUp?'pos':'neg', click:null },
   ];
   document.getElementById('kpi-dailyperf').innerHTML = kpis.map(k=>`
     <div class="kpi-card ${k.cls}" ${k.click?`style="cursor:pointer;" onclick="${k.click}"`:''}><div class="kpi-label">${k.label}</div><div class="kpi-value">${k.value}</div><div class="kpi-sub ${k.subcls||''}">${k.sub||''}</div></div>`).join('');
-  document.getElementById('dp-reconcile-note').innerHTML = `🔗 ยอดเที่ยวรวมทั้งช่วง (${fmtInt(totalOn+totalDe)} เที่ยว${typeFilter!=='ALL'?` · เฉพาะ ${typeFilter}`:''}) = เที่ยวที่มีเวลาถึงปลายทางจริงและจำแนกกะได้ ใช้ฐานเดียวกับชีท Shift Performance และ Shift Action — จาก <b>${fmtInt(getData().length)}</b> เที่ยวทั้งหมดใน Overview`;
+  document.getElementById('dp-reconcile-note').innerHTML = `🔗 ยอดเที่ยวรวมทั้งช่วง (${fmtInt(totalOn+totalDe)} เที่ยว${typeFilter!=='ALL'?` · เฉพาะ ${typeFilter}`:''}) = เที่ยววันจันทร์–ศุกร์ที่มีเวลาถึงปลายทางจริง ใช้ฐานเดียวกับชีท Shift Performance และ Shift Action — จาก <b>${fmtInt(getData().length)}</b> เที่ยวทั้งหมดใน Overview (ตัดเสาร์–อาทิตย์ ${fmtInt(WEEKEND_EXCLUDED)} เที่ยวออกแล้ว)`;
 
+  renderWeekly(base);
+
+  const dayLabels = dates.map(d=>`${TH_DAYS_SHORT[dowOf(d)]} ${d.slice(5)}`);
   mkChart('chart-dp-daily', {
     type:'bar',
-    data:{ labels: dates, datasets:[
-      { label:'ตรงเวลา', data: dates.map(d=>byDate[d].on), backgroundColor: COL_ONTIME },
-      { label:'ล่าช้า', data: dates.map(d=>byDate[d].de), backgroundColor: COL_DELAY },
+    data:{ labels: dayLabels, datasets:[
+      { label:'ตรงเวลา', data: dates.map(d=>byDate[d].on), backgroundColor: COL_ONTIME, labelMode:'trend', better:'up' },
+      { label:'ล่าช้า', data: dates.map(d=>byDate[d].de), backgroundColor: COL_DELAY, labelMode:'trend', better:'down' },
     ]},
-    options:{ responsive:true, maintainAspectRatio:false, plugins:{title:{display:true,text:'จำนวนเที่ยวรายวัน: ตรงเวลา vs ล่าช้า',font:{size:12,weight:'600'}}}, scales:{x:{stacked:true},y:{stacked:true,beginAtZero:true}} }
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{title:{display:true,text:'จำนวนเที่ยวรายวัน (จ.–ศ.): ตรงเวลา vs ล่าช้า — ตัวเลขเขียว = ดีขึ้นจากวันก่อน, แดง = แย่ลง'}}, scales:{y:{beginAtZero:true}} }
   });
   let worstDay = null;
   dates.forEach(d=>{ if(!worstDay || byDate[d].de > byDate[worstDay].de) worstDay = d; });
-  document.getElementById('insight-dp-daily').innerHTML = dates.length ? `<b>สรุป:</b> วันที่มีเที่ยวล่าช้าสูงสุดคือ <b>${worstDay}</b> (${byDate[worstDay].de} เที่ยว) · เฉลี่ย ${fmtInt(avgDaily)} เที่ยว/วัน ตลอดช่วงข้อมูล` : 'ไม่มีข้อมูลในช่วงที่เลือก';
+  document.getElementById('insight-dp-daily').innerHTML = dates.length ? `<b>สรุป:</b> วันที่มีเที่ยวล่าช้าสูงสุดคือ <b>วัน${TH_DAYS[dowOf(worstDay)]}ที่ ${worstDay}</b> (${byDate[worstDay].de} เที่ยว) · เฉลี่ย ${fmtInt(avgDaily)} เที่ยว/วันทำงาน ตลอดช่วงข้อมูล` : 'ไม่มีข้อมูลในช่วงที่เลือก';
 
   let cumOn=0, cumDe=0; const cumOnArr=[], cumDeArr=[];
   dates.forEach(d=>{ cumOn+=byDate[d].on; cumDe+=byDate[d].de; cumOnArr.push(cumOn); cumDeArr.push(cumDe); });
   mkChart('chart-dp-cumulative', {
     type:'line',
-    data:{ labels: dates, datasets:[
-      { label:'ตรงเวลาสะสม', data: cumOnArr, borderColor: COL_ONTIME, backgroundColor: COL_ONTIME, tension:.25 },
-      { label:'ล่าช้าสะสม', data: cumDeArr, borderColor: COL_DELAY, backgroundColor: COL_DELAY, tension:.25 },
+    data:{ labels: dayLabels, datasets:[
+      { label:'ตรงเวลาสะสม', data: cumOnArr, borderColor: COL_ONTIME, backgroundColor: COL_ONTIME, labelMode:'ontime', labelPos:'bottom' },
+      { label:'ล่าช้าสะสม', data: cumDeArr, borderColor: COL_DELAY, backgroundColor: COL_DELAY, labelMode:'delay', labelPos:'top' },
     ]},
-    options:{ responsive:true, maintainAspectRatio:false, plugins:{title:{display:true,text:'จำนวนสะสม (Cumulative)',font:{size:12,weight:'600'}}} }
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{title:{display:true,text:'จำนวนสะสม (Cumulative)'}}, scales:{y:{beginAtZero:true}} }
   });
 
   const pctArr = dates.map(d=>{ const t=byDate[d].on+byDate[d].de; return t? +(byDate[d].on/t*100).toFixed(1) : null; });
   mkChart('chart-dp-pct', {
     type:'line',
-    data:{ labels: dates, datasets:[ { label:'% ตรงเวลารายวัน', data: pctArr, borderColor: COL_AB, backgroundColor: COL_AB, tension:.3 } ] },
-    options:{ responsive:true, maintainAspectRatio:false, plugins:{title:{display:true,text:'% ตรงเวลารายวัน',font:{size:12,weight:'600'}}, legend:{display:false}}, scales:{y:{min:0,max:100}} }
+    data:{ labels: dayLabels, datasets:[ { label:'% ตรงเวลารายวัน', data: pctArr, borderColor: COL_AB, backgroundColor: COL_AB, labelMode:'trend', better:'up', labelFormat:'pct' } ] },
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{title:{display:true,text:'% ตรงเวลารายวัน (เขียว = ดีขึ้น, แดง = แย่ลง)'}, legend:{display:false}}, scales:{y:{min:0,max:100}} }
   });
-  document.getElementById('insight-dp-trend').innerHTML = `<b>แนวโน้ม:</b> % ตรงเวลาเฉลี่ยครึ่งแรกของช่วงข้อมูล ${fmtPct(p1)} เทียบครึ่งหลัง ${fmtPct(p2)} — ประสิทธิภาพการรักษาเวลามีแนวโน้ม ${trendUp? '<span class="trend-up">ดีขึ้น ▲</span>':'<span class="trend-down">ลดลง ▼</span>'} ควร${trendUp?'รักษามาตรฐานนี้ต่อไปและถอดบทเรียนมาปรับใช้กับกะ/เส้นทางที่ยังมีปัญหา':'ทบทวนสาเหตุความล่าช้าที่เพิ่มขึ้นโดยเร็ว โดยเฉพาะช่วงวันที่ ' + (worstDay||'-')}`;
+  document.getElementById('insight-dp-trend').innerHTML = `<b>แนวโน้ม:</b> % ตรงเวลาเฉลี่ยครึ่งแรกของช่วงข้อมูล ${fmtPct(p1)} เทียบครึ่งหลัง ${fmtPct(p2)} ${deltaHTML(p2*100, p1*100, {better:'up', unit:' จุด'})} — ประสิทธิภาพการรักษาเวลามีแนวโน้ม ${trendUp? '<span class="trend-up">ดีขึ้น ▲</span>':'<span class="trend-down">ลดลง ▼</span>'} ควร${trendUp?'รักษามาตรฐานนี้ต่อไปและถอดบทเรียนมาปรับใช้กับกะ/เส้นทางที่ยังมีปัญหา':'ทบทวนสาเหตุความล่าช้าที่เพิ่มขึ้นโดยเร็ว โดยเฉพาะช่วงวันที่ ' + (worstDay||'-')}`;
 
-  const fullData = getData();
-  const { dates: dates2, byDate: byDate2 } = computeDailySeriesABCC(fullData);
+  const { dates: dates2, byDate: byDate2 } = computeDailySeriesABCC(getData());
+  const dayLabels2 = dates2.map(d=>`${TH_DAYS_SHORT[dowOf(d)]} ${d.slice(5)}`);
   mkChart('chart-dp-abcc', {
     type:'line',
-    data:{ labels: dates2, datasets:[
-      { label:'AB % ตรงเวลา', data: dates2.map(d=>byDate2[d].abPct), borderColor: COL_AB, backgroundColor: COL_AB, tension:.3, spanGaps:true },
-      { label:'CC % ตรงเวลา', data: dates2.map(d=>byDate2[d].ccPct), borderColor: COL_CC, backgroundColor: COL_CC, tension:.3, spanGaps:true },
+    data:{ labels: dayLabels2, datasets:[
+      { label:'AB % ตรงเวลา', data: dates2.map(d=>byDate2[d].abPct), borderColor: COL_AB, backgroundColor: COL_AB, labelMode:'trend', better:'up', labelFormat:'pct', labelPos:'bottom', spanGaps:true },
+      { label:'CC % ตรงเวลา', data: dates2.map(d=>byDate2[d].ccPct), borderColor: COL_CC, backgroundColor: COL_CC, labelMode:'trend', better:'up', labelFormat:'pct', labelPos:'top', spanGaps:true },
     ]},
-    options:{ responsive:true, maintainAspectRatio:false, plugins:{title:{display:true,text:'% ตรงเวลารายวัน แยก AB / CC',font:{size:12,weight:'600'}}}, scales:{y:{min:0,max:100}} }
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{title:{display:true,text:'% ตรงเวลารายวัน แยก AB / CC (เขียว = ดีขึ้น, แดง = แย่ลง)'}}, scales:{y:{min:0,max:100}} }
   });
   const abAvg = avg(dates2.map(d=>byDate2[d].abPct).filter(x=>x!==null));
   const ccAvg = avg(dates2.map(d=>byDate2[d].ccPct).filter(x=>x!==null));
@@ -2441,16 +2479,16 @@ function initPlateSearch(){
 }
 
 /* ---------------- init ---------------- */
+function updateSubtitle(){
+  document.getElementById('data-subtitle').textContent = `Mockup · ข้อมูลตัวอย่าง ${fmtInt(DATA.length)} เที่ยว (เฉพาะวันจันทร์–ศุกร์ · ตัดวันเสาร์–อาทิตย์ ${fmtInt(WEEKEND_EXCLUDED)} เที่ยว) · อัปโหลดไฟล์ของคุณเองได้ทางขวา`;
+}
 function renderAll(){ renderOverview(); renderShiftPerf(); renderShiftAction(); renderDailyPerf(); }
 
 document.addEventListener('DOMContentLoaded', () => {
   initFilterBar();
   initFileUpload();
   initPlateSearch();
-  document.getElementById('pen-shift-ddl').onchange = renderPenalty;
-  document.getElementById('pen-type-ddl').onchange = renderPenalty;
-  document.getElementById('pen-start').onchange = renderPenalty;
-  document.getElementById('pen-end').onchange = renderPenalty;
+  updateSubtitle();
   renderAll();
 });
 </script>
